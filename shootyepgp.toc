@@ -1,6 +1,6 @@
 on## Interface: 11200
 ## Title: shootyepgp | |cff808080<ERROR> edition|r
-## Title-zhCN: shootyepgp EPGP插件
+## Title-zhCN: shootyepgp EPGP插件 | |cff808080<ERROR> edition|r
 ## Notes: Effort Points/Gear Points Loot System
 ## Notes-zhCN: 贡献点/装备点拾取制度系统
 ## Author: Roadblock
