@@ -7,6 +7,17 @@ local L = AceLibrary("AceLocale-2.2"):new("shootyepgp")
 
 sepgp_bids = sepgp:NewModule("sepgp_bids", "AceDB-2.0", "AceEvent-2.0")
 
+-- Helper to get guild rank
+function sepgp_bids:getGuildRank(name)
+  for i = 1, GetNumGuildMembers(true) do
+    local n, rankName = GetGuildRosterInfo(i)
+    if n == name then
+      return rankName
+    end
+  end
+  return ""
+end
+
 function sepgp_bids:OnEnable()
   if not T:IsRegistered("sepgp_bids") then
     T:Register("sepgp_bids",
@@ -68,7 +79,7 @@ end
 function sepgp_bids:Toggle(forceShow)
   self:Top()
   if T:IsAttached("sepgp_bids") then
-    T:Detach("sepgp_bids") -- show
+    T:Detach("sepgp_bids")
     if (T:IsLocked("sepgp_bids")) then
       T:ToggleLocked("sepgp_bids")
     end
@@ -77,7 +88,7 @@ function sepgp_bids:Toggle(forceShow)
     if (forceShow) then
       sepgp_bids:Refresh()
     else
-      T:Attach("sepgp_bids") -- hide
+      T:Attach("sepgp_bids")
     end
   end  
 end
@@ -95,7 +106,6 @@ function sepgp_bids:countdownCounter()
   if GetNumRaidMembers()>0 and self._counter > 0 then
     self._counterText = C:Yellow(tostring(self._counter))
     sepgp:widestAudience(tostring(self._counter))
-    --SendChatMessage(tostring(self._counter),"RAID")
     self:Refresh()
   end
 end
@@ -144,7 +154,6 @@ local pr_sorter_bids = function(a,b)
 end
 
 function sepgp_bids:BuildBidsTable()
-  -- {name,class,ep,gp,ep/gp[,main]}
   table.sort(sepgp.bids_main, pr_sorter_bids)
   table.sort(sepgp.bids_off, pr_sorter_bids)
   return sepgp.bids_main, sepgp.bids_off
@@ -201,11 +210,16 @@ function sepgp_bids:OnTooltipUpdate()
   local tm = self:BuildBidsTable()
   for i = 1, table.getn(tm) do
     local name, class, ep, gp, pr, main = unpack(tm[i])
+    local rankName = self:getGuildRank(name)
+    local coloredRank = (rankName == "Core Raider") and C:Green("(" .. rankName .. ")") or C:Colorize("aaaaaa", "("..rankName..")")
     local namedesc
     if (main) then
       namedesc = string.format("%s(%s)", C:Colorize(BC:GetHexColor(class), name), L["Alt"])
     else
       namedesc = C:Colorize(BC:GetHexColor(class), name)
+    end
+    if rankName ~= "" then
+      namedesc = namedesc.." "..coloredRank
     end
     local text2, text4
     if sepgp_minep > 0 and ep < sepgp_minep then
@@ -240,11 +254,16 @@ function sepgp_bids:OnTooltipUpdate()
   local _,to = self:BuildBidsTable()
   for i = 1, table.getn(to) do
     local name, class, ep, gp, pr, main = unpack(to[i])
+    local rankName = self:getGuildRank(name)
+    local coloredRank = (rankName == "Core Raider") and C:Green("(" .. rankName .. ")") or C:Colorize("aaaaaa", "("..rankName..")")
     local namedesc
     if (main) then
-      namedesc = string.format("%s%(%s%)", C:Colorize(BC:GetHexColor(class), name), L["Alt"])
+      namedesc = string.format("%s(%s)", C:Colorize(BC:GetHexColor(class), name), L["Alt"])
     else
       namedesc = C:Colorize(BC:GetHexColor(class), name)
+    end
+    if rankName ~= "" then
+      namedesc = namedesc.." "..coloredRank
     end
     local text2, text4
     if sepgp_minep > 0 and ep < sepgp_minep then
