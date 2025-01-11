@@ -159,7 +159,6 @@ function sepgp_standings.import()
       local name_epgp = t[name]
       if (name_epgp) then
         count = count + 1
-        --sepgp:debugPrint(string.format("%s {%s:%s}",name,name_epgp[1],name_epgp[2])) -- Debug
         sepgp:update_epgp_v3(name_epgp[1],name_epgp[2],i,name,officernote)
         t[name]=nil
       end
@@ -221,10 +220,10 @@ function sepgp_standings:OnEnable()
         T:SetTitle(L["shootyepgp standings"])
         self:OnTooltipUpdate()
       end,
-  		"showTitleWhenDetached", true,
-  		"showHintWhenDetached", true,
-  		"cantAttach", true,
-  		"menu", function()
+      "showTitleWhenDetached", true,
+      "showHintWhenDetached", true,
+      "cantAttach", true,
+      "menu", function()
         D:AddLine(
           "text", L["Raid Only"],
           "tooltipText", L["Only show members in raid."],
@@ -266,7 +265,7 @@ function sepgp_standings:OnEnable()
           "func", function() sepgp_standings:Import() end
         )
         end
-  		end
+      end
     )
   end
   if not T:IsAttached("sepgp_standings") then
@@ -310,8 +309,8 @@ end
 
 function sepgp_standings:Toggle(forceShow)
   self:Top()
-  if T:IsAttached("sepgp_standings") then -- hidden
-    T:Detach("sepgp_standings") -- show
+  if T:IsAttached("sepgp_standings") then
+    T:Detach("sepgp_standings")
     if (T:IsLocked("sepgp_standings")) then
       T:ToggleLocked("sepgp_standings")
     end
@@ -320,7 +319,7 @@ function sepgp_standings:Toggle(forceShow)
     if (forceShow) then
       sepgp_standings:Refresh()
     else
-      T:Attach("sepgp_standings") -- hide
+      T:Attach("sepgp_standings")
     end
   end  
 end
@@ -365,9 +364,7 @@ local pr_sorter_standings = function(a,b)
     end
   end
 end
--- Builds a standings table with record:
--- name, class, armor_class, roles, EP, GP, PR
--- and sorted by PR
+
 function sepgp_standings:BuildStandingsTable()
   local t = { }
   local r = { }
@@ -379,7 +376,7 @@ function sepgp_standings:BuildStandingsTable()
   end
   sepgp.alts = {}
   for i = 1, GetNumGuildMembers(1) do
-    local name, _, _, _, class, _, note, officernote, _, _ = GetGuildRosterInfo(i)
+    local name, rankName, rankIndex, level, class, zone, note, officernote, connected, status = GetGuildRosterInfo(i)
     local ep = (sepgp:get_ep_v3(name,officernote) or 0) 
     local gp = (sepgp:get_gp_v3(name,officernote) or sepgp.VARS.basegp)
     local main, main_class, main_rank = sepgp:parseAlt(name,officernote)
@@ -398,10 +395,10 @@ function sepgp_standings:BuildStandingsTable()
     if ep > 0 then
       if (sepgp_raidonly) and next(r) then
         if r[name] then
-          table.insert(t,{name,class,armor_class,ep,gp,ep/gp})
+          table.insert(t,{name,class,armor_class,ep,gp,ep/gp,rankName})
         end
       else
-      	table.insert(t,{name,class,armor_class,ep,gp,ep/gp})
+        table.insert(t,{name,class,armor_class,ep,gp,ep/gp,rankName})
       end
     end
   end
@@ -416,11 +413,11 @@ function sepgp_standings:BuildStandingsTable()
       else return pr_sorter_standings(a,b) end
     end)
   elseif (sepgp_groupbyrole) then
-    t = self:getRolesClass(t) -- we are subbing role into armor_class to avoid extra table creation
+    t = self:getRolesClass(t)
     table.sort(t, function(a,b)
-    if (a[3] ~= b[3]) then return a[3] > b[3]
+      if (a[3] ~= b[3]) then return a[3] > b[3]
       else return pr_sorter_standings(a,b) end
-    end)   
+    end)
   else
     table.sort(t, pr_sorter_standings)
   end
@@ -438,7 +435,7 @@ function sepgp_standings:OnTooltipUpdate()
   local t = self:BuildStandingsTable()
   local separator
   for i = 1, table.getn(t) do
-    local name, class, armor_class, ep, gp, pr = unpack(t[i])
+    local name, class, armor_class, ep, gp, pr, rankName = unpack(t[i])
     if (sepgp_groupbyarmor) or (sepgp_groupbyrole) then
       if not (separator) then
         if (sepgp_groupbyarmor) then
@@ -471,7 +468,7 @@ function sepgp_standings:OnTooltipUpdate()
         end
       end
     end
-    local text = C:Colorize(BC:GetHexColor(class), name)
+    local text = C:Colorize(BC:GetHexColor(class), name) .. " " .. C:Colorize("aaaaaa", "("..rankName..")")
     local text2, text4
     if sepgp_minep > 0 and ep < sepgp_minep then
       text2 = C:Red(string.format("%.4g", ep))
@@ -480,7 +477,7 @@ function sepgp_standings:OnTooltipUpdate()
       text2 = string.format("%.4g", ep)
       text4 = string.format("%.4g", pr)
     end
-    local text3 = string.format("%.4g", gp)    
+    local text3 = string.format("%.4g", gp)
     if ((sepgp._playerName) and sepgp._playerName == name) or ((sepgp_main) and sepgp_main == name) then
       text = string.format("(*)%s",text)
       local pr_decay = sepgp:capcalc(ep,gp)
