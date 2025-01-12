@@ -211,7 +211,8 @@ function sepgp_bids:OnTooltipUpdate()
   for i = 1, table.getn(tm) do
     local name, class, ep, gp, pr, main = unpack(tm[i])
     local rankName = self:getGuildRank(name)
-    local coloredRank = (rankName == "Core Raider") and C:Green("(" .. rankName .. ")") or C:Colorize("aaaaaa", "("..rankName..")")
+    local coloredRank = (rankName == "Core Raider" or rankName == "Officer" or rankName == "Supreme leader") and C:Green("(" .. rankName .. ")") or C:Colorize("aaaaaa", "(" .. rankName .. ")")
+
     local namedesc
     if (main) then
       namedesc = string.format("%s(%s)", C:Colorize(BC:GetHexColor(class), name), L["Alt"])
