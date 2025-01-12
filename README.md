@@ -1,3 +1,5 @@
+Fork with some modifications and correct pricelist to suit <ERROR> guild on TurtleWoW
+
 # shootyepgp
 Guild Helper addon for EPGP loot system in WoW (1.12)
 
