@@ -687,6 +687,7 @@ function sepgp:delayedInit()
 end
 
 function sepgp:AddDataToTooltip(tooltip,itemlink,itemstring,is_master)
+
   local price
   if (itemstring) then
     price = sepgp_prices:GetPrice(itemstring,sepgp_progress)
@@ -699,8 +700,10 @@ function sepgp:AddDataToTooltip(tooltip,itemlink,itemstring,is_master)
     line_limit = 27 
     left1,right1 = C:Yellow(L["Alt Click/RClick/MClick"]), C:Orange(L["Call for: MS/OS/Both"])
   else 
-    line_limit = 28 
+    line_limit = 28
+
   end
+
   local ep,gp = (self:get_ep_v3(self._playerName) or 0), (self:get_gp_v3(self._playerName) or sepgp.VARS.basegp)
   local off_price = math.floor(price*sepgp_discount)
   local pr,new_pr,new_pr_off = ep/gp, ep/(gp+price), ep/(gp+off_price)
@@ -710,6 +713,54 @@ function sepgp:AddDataToTooltip(tooltip,itemlink,itemstring,is_master)
   local textRight2 = string.format(L["pr:|cffff0000%.02f|r(%.02f) pr_os:|cffff0000%.02f|r(%.02f)"],pr_delta,new_pr,pr_delta_off,new_pr_off)
   if (tooltip:NumLines() < line_limit) then
     tooltip:AddLine(" ")
+
+
+  -- ### START: Insert after 'line_limit' is defined, before GP/PR lines
+
+  local itemID = nil
+
+  -- Attempt itemlink first
+  if type(itemlink) == "string" then
+    local _, _, id = string.find(itemlink, "Hitem:(%d+)")
+    if not id then
+      -- fallback if above didn't work
+      _, _, id = string.find(itemlink, "item:(%d+)")
+    end
+    if id then
+      itemID = id
+    end
+  end
+
+  -- If nothing found, try itemstring
+  if (not itemID) and type(itemstring) == "string" then
+    local _, _, id = string.find(itemstring, "Hitem:(%d+)")
+    if not id then
+      -- fallback if above didn't work
+      _, _, id = string.find(itemstring, "item:(%d+)")
+    end
+    if id then
+      itemID = id
+    end
+  end
+
+  -- Now safely add Item ID to the tooltip
+  if itemID then
+    if tooltip:NumLines() < line_limit then
+      tooltip:AddLine("Item ID: " .. itemID)
+      tooltip:Show()
+    else
+      -- If pfUI forced us to use the extra tooltip
+      sepgp.extratip:AddLine("Item ID: " .. itemID)
+      sepgp.extratip:Show()
+    end
+  end
+
+  -- ### END
+
+
+
+
+
     tooltip:AddDoubleLine("|cff9664c8shootyepgp|r",textRight)
     tooltip:AddDoubleLine(" ",textRight2)
     if (is_master) then
