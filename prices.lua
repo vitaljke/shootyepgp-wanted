@@ -2,7 +2,8 @@ local prices = {
     -----------------
     --- Naxxramas ---
     -----------------
-  [22349] = {120,"T3"}; --T3 Chest Token
+    
+  [55581] = {80,"T3"}; --T3 Desecrated Ring
   [22350] = {120,"T3"}; --T3 Chest Token
   [22351] = {120,"T3"}; --T3 Chest Token
   [22352] = {120,"T3"}; --T3 Pants Token
@@ -219,6 +220,7 @@ local prices = {
     ---------------------------
     --- Temple of Ahn'Qiraj ---
     ---------------------------
+  [555533] = {300,"T2.5"}; --Gloves of the Primordial Burrower  
   [20926] = {60,"T2.5"}; --Vek'nilash's Circlet
   [20927] = {60,"T2.5"}; --Ouro's Intact Hide
   [20928] = {60,"T2.5"}; --Qiraji Bindings of Command
