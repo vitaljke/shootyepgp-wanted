@@ -1,8 +1,8 @@
 -- 1) Register a new slash command /parseid
-SLASH_PARSEID1 = "/getid"
+SLASH_PARSEID1 = "/parseid"
 
 -- 2) Command handler function
-SlashCmdList["GETID"] = function(msg)
+SlashCmdList["PARSEID"] = function(msg)
   -- Example input might be:
   -- |cffa335ee|Hitem:12345:0:0:0|h[Some Item]|h|r
 
