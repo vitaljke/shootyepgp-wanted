@@ -1,4 +1,9 @@
-Fork with some modifications and correct pricelist to suit <ERROR> guild on TurtleWoW
+# Fork for the < ERROR > guild (Turtle WoW)
+- Displays Player Rank
+- Corrected Pricelist including custom Turtle WoW items
+- Shows item ID's
+- Ability to look up an item's ID by typing ``/parseid [ITEM_LINK]`` in game
+
 
 # shootyepgp
 Guild Helper addon for EPGP loot system in WoW (1.12)
