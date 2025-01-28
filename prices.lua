@@ -222,7 +222,6 @@ local prices = {
     ---------------------------
     --- Temple of Ahn'Qiraj ---
     ---------------------------
-  [55554] = {300,"T2.5"}; --Carapace Handguards 
   [555533] = {300,"T2.5"}; --Gloves of the Primordial Burrower  
   [20926] = {60,"T2.5"}; --Vek'nilash's Circlet
   [20927] = {60,"T2.5"}; --Ouro's Intact Hide

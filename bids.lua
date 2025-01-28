@@ -214,7 +214,7 @@ function sepgp_bids:OnTooltipUpdate()
     local coloredRank = (rankName == "Core Raider" or rankName == "Officer" or rankName == "Supreme leader") and C:Green("(" .. rankName .. ")") or C:Colorize("aaaaaa", "(" .. rankName .. ")")
 
     local namedesc
-    if (main) then
+    if main ~= "" then
       namedesc = string.format("%s(%s)", C:Colorize(BC:GetHexColor(class), name), L["Alt"])
     else
       namedesc = C:Colorize(BC:GetHexColor(class), name)
@@ -253,19 +253,32 @@ function sepgp_bids:OnTooltipUpdate()
       "hideBlankLine", true
     )
   local _,to = self:BuildBidsTable()
+  -- Offspec list
   for i = 1, table.getn(to) do
-    local name, class, ep, gp, pr, main = unpack(to[i])
+    local name, class, ep, gp, pr, main, prio_flag = unpack(to[i])
     local rankName = self:getGuildRank(name)
-    local coloredRank = (rankName == "Core Raider") and C:Green("(" .. rankName .. ")") or C:Colorize("aaaaaa", "("..rankName..")")
+    local coloredRank = (rankName == "Core Raider" or rankName == "Officer" or rankName == "Supreme leader") and C:Green("(" .. rankName .. ")") or C:Colorize("aaaaaa", "(" .. rankName .. ")")
+
+
     local namedesc
-    if (main) then
+    if main ~= "" then
       namedesc = string.format("%s(%s)", C:Colorize(BC:GetHexColor(class), name), L["Alt"])
     else
       namedesc = C:Colorize(BC:GetHexColor(class), name)
     end
+
     if rankName ~= "" then
-      namedesc = namedesc.." "..coloredRank
+      namedesc = namedesc .. " " .. coloredRank
     end
+
+    if prio_flag == "OSPRIO" then
+      namedesc = C:Red("[PRIO] ") .. namedesc
+      prio_tag = "[PRIO] "
+    else
+      prio_tag = ""
+    end
+
+    -- Then you build ep/gp text, etc.
     local text2, text4
     if sepgp_minep > 0 and ep < sepgp_minep then
       text2 = C:Red(string.format("%.4g", ep))
@@ -273,16 +286,20 @@ function sepgp_bids:OnTooltipUpdate()
     else
       text2 = string.format("%.4g", ep)
       text4 = string.format("%.4g", pr)
-    end    
+    end
+
+    name = prio_tag .. name
+
     offcat:AddLine(
-      "text", namedesc,
+      "text",  namedesc,
       "text2", text2,
       "text3", string.format("%.4g", gp),
       "text4", text4,
-      "text5", (main or ""),
-      "func", "announceWinnerOS", "arg1", self, "arg2", name, "arg3", pr
+      "text5", main or "",
+      "func",  "announceWinnerOS", "arg1", self, "arg2", name, "arg3", pr
     )
-  end   
+  end
+  
 end
 
 -- GLOBALS: sepgp_saychannel,sepgp_groupbyclass,sepgp_groupbyarmor,sepgp_groupbyrole,sepgp_raidonly,sepgp_decay,sepgp_minep,sepgp_reservechannel,sepgp_main,sepgp_progress,sepgp_discount,sepgp_log,sepgp_dbver,sepgp_looted

@@ -51,7 +51,7 @@ sepgp.VARS = {
 }
 sepgp.VARS.reservecall = string.format(L["{shootyepgp}Type \"+\" if on main, or \"+<YourMainName>\" (without quotes) if on alt within %dsec."],sepgp.VARS.timeout)
 sepgp._playerName = (UnitName("player"))
-local out = "|cff9664c8shootyepgp:|r %s"
+local out = "|cff999999EPGP<ERROR>:|r %s"
 local raidStatus,lastRaidStatus
 local lastUpdate = 0
 local needInit,needRefresh = true
@@ -62,8 +62,9 @@ local partyUnit,raidUnit = {},{}
 local hexColorQuality = {}
 local reserves_blacklist,bids_blacklist = {},{}
 local bidlink = {
-  ["ms"]=L["|cffFF3333|Hshootybid:1:$ML|h[Mainspec/NEED]|h|r"],
-  ["os"]=L["|cff009900|Hshootybid:2:$ML|h[Offspec/GREED]|h|r"]
+  ["ms"]=L["|cff0066ff|Hshootybid:1:$ML|h[MAINSPEC]|h|r"],
+  ["os"]=L["|cff3ade2f|Hshootybid:2:$ML|h[OFFSPEC]|h|r"],
+  ["prioos"] = L["|cff3ade2f|Hshootybid:3:$ML|h[|r|cffff0000PRIO|r |cff3ade2fOFFSPEC]|h|r"]
 }
 local options
 do
@@ -782,7 +783,7 @@ function sepgp:AddDataToTooltip(tooltip,itemlink,itemstring,is_master)
 
 
 
-    tooltip:AddDoubleLine("|cff9664c8shootyepgp|r",textRight)
+    tooltip:AddDoubleLine("|cff999999EPGP<ERROR>|r",textRight)
     tooltip:AddDoubleLine(" ",textRight2)
     if (is_master) then
       tooltip:AddDoubleLine(left1,right1)
@@ -799,7 +800,7 @@ function sepgp:AddDataToTooltip(tooltip,itemlink,itemstring,is_master)
       sepgp.extratip:SetPoint("TOPLEFT", tooltip, "BOTTOMLEFT", 0, -5)
       sepgp.extratip:SetPoint("TOPRIGHT", tooltip, "BOTTOMRIGHT", 0, -5)
     end
-    sepgp.extratip:SetText("|cff9664c8shootyepgp|r")
+    sepgp.extratip:SetText("|cff999999EPGP<ERROR>|r")
     sepgp.extratip:AddDoubleLine(" ",textRight)
     sepgp.extratip:AddDoubleLine(" ",textRight2)
     if (is_master) then
@@ -861,6 +862,8 @@ function sepgp:SetItemRef(link, name, button)
       bid = "+"
     elseif bid == "2" then
       bid = "-"
+    elseif bid == "3" then
+      bid = "OSPRIO"
     else
       bid = nil
     end
@@ -997,27 +1000,46 @@ function sepgp:defaultPrint(msg)
   DEFAULT_CHAT_FRAME:AddMessage(string.format(out,msg))
 end
 
-function sepgp:bidPrint(link,masterlooter,need,greed,bid)
-  local mslink = string.gsub(bidlink["ms"],"$ML",masterlooter)
-  local oslink = string.gsub(bidlink["os"],"$ML",masterlooter)
-  local msg = string.format(L["Click $MS or $OS for %s"],link)
+function sepgp:bidPrint(link, masterlooter, need, greed, bid)
+  -- Build each clickable link
+  local mslink   = string.gsub(bidlink["ms"],   "$ML", masterlooter)
+  local oslink   = string.gsub(bidlink["os"],   "$ML", masterlooter)
+  local priooslink = string.gsub(bidlink["prioos"], "$ML", masterlooter)
+
+  -- Start with a string that has placeholders for all three
+  local msg = string.format(L["Click $MS or $PRIOOS or $OS for %s"], link)
+  PlaySoundFile("Interface\\AddOns\\shootyepgp\\Sounds\\loot.wav")
+
+  -- Decide which placeholders to keep/remove based on need/greed/bid
   if (need and greed) then
-    msg = string.gsub(msg,"$MS",mslink)
-    msg = string.gsub(msg,"$OS",oslink)
+    -- Keep all three
+    msg = string.gsub(msg, "$MS",   mslink)
+    msg = string.gsub(msg, "$PRIOOS", priooslink)
+    msg = string.gsub(msg, "$OS",   oslink)
   elseif (need) then
-    msg = string.gsub(msg,"$MS",mslink)
-    msg = string.gsub(msg,L["or $OS "],"")
+    -- Only show MS + MSOS, remove the OS part
+    msg = string.gsub(msg, "$MS",   mslink)
+    msg = string.gsub(msg, "$PRIOOS", priooslink)
+    msg = string.gsub(msg, " or $OS", "")
   elseif (greed) then
-    msg = string.gsub(msg,"$OS",oslink)
-    msg = string.gsub(msg,L["$MS or "],"")
+    -- Only show OS, remove MS + MSOS
+    msg = string.gsub(msg, "$OS", oslink)
+    -- remove "$MS or $MSOS or " (or your exact localized phrase)
+    msg = string.gsub(msg, "$MS or $PRIOOS or ", "")
   elseif (bid) then
-    msg = string.gsub(msg,"$MS",mslink)
-    msg = string.gsub(msg,"$OS",oslink)  
+    -- If 'bid' is true, we keep all (same as need+greed)
+    msg = string.gsub(msg, "$MS",   mslink)
+    msg = string.gsub(msg, "$PRIOOS", priooslink)
+    msg = string.gsub(msg, "$OS",   oslink)
   end
-  local _, count = string.gsub(msg,"%$","%$")
+
+  -- If there's still an un-replaced placeholder, exit
+  local _, count = string.gsub(msg, "%$", "%$")
   if (count > 0) then return end
+
+  -- Decide which chat frame to print in
   local chatframe
-  if (SELECTED_CHAT_FRAME) then
+  if SELECTED_CHAT_FRAME then
     chatframe = SELECTED_CHAT_FRAME
   else
     if not DEFAULT_CHAT_FRAME:IsVisible() then
@@ -1025,11 +1047,18 @@ function sepgp:bidPrint(link,masterlooter,need,greed,bid)
     end
     chatframe = DEFAULT_CHAT_FRAME
   end
-  if (chatframe) then
+
+  -- Output to chat
+  if chatframe then
     chatframe:AddMessage(" ")
-    chatframe:AddMessage(string.format(out,msg),NORMAL_FONT_COLOR.r,NORMAL_FONT_COLOR.g,NORMAL_FONT_COLOR.b)
+    chatframe:AddMessage(string.format(out, msg),
+      NORMAL_FONT_COLOR.r,
+      NORMAL_FONT_COLOR.g,
+      NORMAL_FONT_COLOR.b
+    )
   end
 end
+
 
 function sepgp:simpleSay(msg)
   SendChatMessage(string.format("shootyepgp: %s",msg), sepgp_saychannel)
@@ -1870,55 +1899,92 @@ end
 local lootBid = {}
 lootBid.ms = {"(%+)",".+(%+).*",".*(%+).+",".*(%+).*","(ms)","(need)"}
 lootBid.os = {"(%-)",".+(%-).*",".*(%-).+",".*(%-).*","(os)","(greed)"}
+lootBid.msos = {".*[oO][sS][pP][rR][iI][oO].*"}
+
+
 function sepgp:captureBid(text, sender)
-  if not (running_bid) then return end
+  if not running_bid then return end
   if not (IsRaidLeader() or self:lootMaster()) then return end
   if not sepgp.bid_item.link then return end
-  local mskw_found,oskw_found
-  local lowtext = string.lower(text)
-  for _,f in ipairs(lootBid.ms) do
-    mskw_found = string.find(text,f)
-    if (mskw_found) then break end
+
+  local mskw_found, oskw_found, msoskw_found
+
+  -- Check for + (mainspec)
+  for _, f in ipairs(lootBid.ms) do
+    if string.find(text, f) then
+      mskw_found = true
+      break
+    end
   end
-  for _,f in ipairs(lootBid.os) do
-    oskw_found = string.find(text,f)
-    if (oskw_found) then break end
+
+  -- Check for - (offspec)
+  for _, f in ipairs(lootBid.os) do
+    if string.find(text, f) then
+      oskw_found = true
+      break
+    end
   end
-  if (mskw_found) or (oskw_found) then
-    if self:inRaid(sender) then
-      if bids_blacklist[sender] == nil then
-        for i = 1, GetNumGuildMembers(1) do
-          local name, _, _, _, class, _, note, officernote, _, _ = GetGuildRosterInfo(i)
-          if name == sender then
-            local ep = (self:get_ep_v3(name,officernote) or 0) 
-            local gp = (self:get_gp_v3(name,officernote) or sepgp.VARS.basegp)
-            local main_name
-            if (sepgp_altspool) then
-              local main, main_class, main_rank, main_offnote = self:parseAlt(name,officernote)
-              if (main) then
-                ep = (self:get_ep_v3(main,main_offnote) or 0)
-                gp = (self:get_gp_v3(main,main_offnote) or sepgp.VARS.basegp)
-                main_name = main
-              end
+
+  -- Check for OSPRIO
+  for _, f in ipairs(lootBid.msos) do
+    if string.find(text, f) then
+      msoskw_found = true
+      break
+    end
+  end
+
+  if mskw_found or oskw_found or msoskw_found then
+    if self:inRaid(sender) and not bids_blacklist[sender] then
+      local prio_flag = "OSPRIO"
+      for i = 1, GetNumGuildMembers() do
+        local name, _, _, _, class, _, note, officernote, _, _ = GetGuildRosterInfo(i)
+        if name == sender then
+          local ep = (self:get_ep_v3(name, officernote) or 0)
+          local gp = (self:get_gp_v3(name, officernote) or sepgp.VARS.basegp)
+          local main_name
+
+          -- If pooling alts into main's EPGP
+          if sepgp_altspool then
+            local alt_main, alt_class, _, alt_officernote = self:parseAlt(name, officernote)
+            if alt_main then
+              ep = (self:get_ep_v3(alt_main, alt_officernote) or 0)
+              gp = (self:get_gp_v3(alt_main, alt_officernote) or sepgp.VARS.basegp)
+              main_name = alt_main
             end
-            if (mskw_found) then
-              bids_blacklist[sender] = true
-              if (sepgp_altspool) and (main_name) then
-                table.insert(sepgp.bids_main,{name,class,ep,gp,ep/gp,main_name})
-              else
-                table.insert(sepgp.bids_main,{name,class,ep,gp,ep/gp})
-              end
-            elseif (oskw_found) then
-              bids_blacklist[sender] = true
-              if (sepgp_altspool) and (main_name) then
-                table.insert(sepgp.bids_off,{name,class,ep,gp,ep/gp,main_name})
-              else
-                table.insert(sepgp.bids_off,{name,class,ep,gp,ep/gp})
-              end
-            end
-            sepgp_bids:Toggle(true)
-            return
           end
+
+          -- Mark them so we don't double-add
+          bids_blacklist[sender] = true
+
+          if mskw_found then
+            -- It's a + (Mainspec)
+            if main_name then
+              table.insert(sepgp.bids_main, {name, class, ep, gp, ep / gp, main_name, ""})
+            else
+              table.insert(sepgp.bids_main, {name, class, ep, gp, ep / gp, "", ""})
+            end
+
+          elseif oskw_found then
+            -- It's a - (Offspec)
+            if main_name then
+              table.insert(sepgp.bids_off, {name, class, ep, gp, ep / gp, main_name, ""})
+            else
+              table.insert(sepgp.bids_off, {name, class, ep, gp, ep / gp, "", ""})
+            end
+
+          elseif msoskw_found then
+            -- It's OSPRIO -> Also place in the Offspec table,
+            -- but with "OSPRIO" flag so we can detect it in the GUI
+            if main_name then
+              table.insert(sepgp.bids_off, {name, class, ep, gp, ep / gp, main_name, prio_flag})
+            else
+              table.insert(sepgp.bids_off, {name, class, ep, gp, ep / gp, "", prio_flag})
+            end
+          end
+
+          -- Refresh the bids window
+          sepgp_bids:Toggle(true)
+          return
         end
       end
     end
