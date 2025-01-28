@@ -3,7 +3,7 @@
 - Corrected Pricelist including custom Turtle WoW items
 - Shows item ID's
 - Ability to look up an item's ID by typing ``/parseid [ITEM_LINK]`` in game
-- Did option: OS PRIO
+- Bid option: OS PRIO
 - Sound plays when loot is announced
 
 
