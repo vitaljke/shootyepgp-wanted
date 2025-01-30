@@ -5,6 +5,7 @@
 - Ability to look up an item's ID by typing ``/parseid [ITEM_LINK]`` in game
 - Bid option: OS PRIO
 - Sound plays when loot is announced
+- Datamine items by typing ``/datamine`` in game
 
 
 # shootyepgp
