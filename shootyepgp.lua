@@ -1,12 +1,119 @@
--- 1) Register a new slash command /parseid
+SLASH_DATAMINE1 = "/datamine"
+
+local function GetItemByID(id, retry)
+    local itemName, _, itemQuality = GetItemInfo(id)
+
+    if itemName then
+        -- Get item color based on quality
+        local itemColor = ITEM_QUALITY_COLORS[itemQuality] and ITEM_QUALITY_COLORS[itemQuality].hex or "|cffffffff"
+        local coloredItemLink = itemColor .. "|Hitem:" .. id .. ":0:0:0:0:0:0:0|h[" .. itemName .. "]|h|r"
+        DEFAULT_CHAT_FRAME:AddMessage("Item: " .. coloredItemLink)
+    else
+        if not retry then
+            DEFAULT_CHAT_FRAME:AddMessage("|cffff9900[Info]|r Try one more time. If it fails again try another ID")
+            GameTooltip:SetHyperlink("item:" .. id)  -- Force a server query
+        end
+
+        local frame = CreateFrame("Frame")
+        frame:RegisterEvent("GET_ITEM_INFO_RECEIVED")
+        frame:SetScript("OnEvent", function(self, event, itemID, success)
+            if itemID == id then
+                local newItemName, _, newItemQuality = GetItemInfo(itemID)
+                if newItemName then
+                    local newItemColor = ITEM_QUALITY_COLORS[newItemQuality] and ITEM_QUALITY_COLORS[newItemQuality].hex or "|cffffffff"
+                    local newColoredItemLink = newItemColor .. "|Hitem:" .. itemID .. ":0:0:0:0:0:0:0|h[" .. newItemName .. "]|h|r"
+                    DEFAULT_CHAT_FRAME:AddMessage("Item: " .. newColoredItemLink)
+                else
+                    if not retry then
+                        GetItemByID(itemID, true) -- Retry once
+                    else
+                        DEFAULT_CHAT_FRAME:AddMessage("|cffff0000[Error]|r Failed to fetch item data.")
+                    end
+                end
+                frame:UnregisterEvent("GET_ITEM_INFO_RECEIVED")
+                frame:SetScript("OnEvent", nil)
+            end
+        end)
+    end
+end
+
+local function CreateItemIDFrame()
+
+
+    local frame = CreateFrame("Frame", "ItemIDFrame", UIParent)
+    frame:SetWidth(200)
+    frame:SetHeight(100)
+    frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+    frame:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", edgeFile = "Interface/Tooltips/UI-Tooltip-Border", tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 }})
+    frame:SetBackdropColor(0, 0, 0, 0.8)
+    frame:EnableMouse(true)
+    frame:SetMovable(true)
+    frame:RegisterForDrag("LeftButton")
+    frame:SetScript("OnDragStart", function() ItemIDFrame:StartMoving() end)
+    frame:SetScript("OnDragStop", function() ItemIDFrame:StopMovingOrSizing() end)
+
+    local title = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    title:SetPoint("TOPLEFT", frame, "TOPLEFT", 10, -10)
+    title:SetText("DATA MINER")
+    
+    local editBox = CreateFrame("EditBox", nil, frame, "InputBoxTemplate")
+    editBox:SetWidth(120)
+    editBox:SetHeight(20)
+    editBox:SetPoint("TOP", frame, "TOP", 0, -40)
+    editBox:SetAutoFocus(false)
+    editBox:SetNumeric(true)
+    
+    local function AdjustItemID(delta)
+        local currentID = tonumber(editBox:GetText()) or 0
+        editBox:SetText(currentID + delta)
+    end
+    
+    local upButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+    upButton:SetWidth(20)
+    upButton:SetHeight(20)
+    upButton:SetPoint("LEFT", editBox, "RIGHT", 5, 0)
+    upButton:SetText("+")
+    upButton:SetScript("OnClick", function() AdjustItemID(1) end)
+    
+    local downButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+    downButton:SetWidth(20)
+    downButton:SetHeight(20)
+    downButton:SetPoint("RIGHT", editBox, "LEFT", -5, 0)
+    downButton:SetText("-")
+    downButton:SetScript("OnClick", function() AdjustItemID(-1) end)
+    local queryButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+    queryButton:SetWidth(80)
+    queryButton:SetHeight(20)
+    queryButton:SetPoint("BOTTOM", frame, "BOTTOM", 0, 10)
+    queryButton:SetText("Query Item")
+    queryButton:SetScript("OnClick", function()
+        local itemID = tonumber(editBox:GetText())
+        if itemID then GetItemByID(itemID, false) end
+    end)
+    
+        local closeButton = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
+    closeButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -5, -5)
+    closeButton:SetScript("OnClick", function() frame:Hide() end)
+    
+    frame:Hide()
+    return frame
+end
+
+local itemIDFrame = CreateItemIDFrame()
+
+SlashCmdList["DATAMINE"] = function(msg)
+    if itemIDFrame:IsShown() then
+        itemIDFrame:Hide()
+    else
+        itemIDFrame:Show()
+    end
+end
+
+
+
+-- FUNCTION TO CATCH ITEM ID
 SLASH_PARSEID1 = "/parseid"
-
--- 2) Command handler function
 SlashCmdList["PARSEID"] = function(msg)
-  -- Example input might be:
-  -- |cffa335ee|Hitem:12345:0:0:0|h[Some Item]|h|r
-
-  -- Use string.find to capture the digits after "Hitem:"
   local _, _, itemID = string.find(msg, "Hitem:(%d+)")
   
   if itemID then
