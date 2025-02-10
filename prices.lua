@@ -222,6 +222,7 @@ local prices = {
     ---------------------------
     --- Temple of Ahn'Qiraj ---
     ---------------------------
+  [21890] = {15,"T2.5"}; --Gloves of the Fallen Prophet
   [55555] = {200,"T2.5"}; --Ivonor, Maiden's Mallet 
   [55554] = {300,"T2.5"}; --Carapace Handguards 
   [55553] = {300,"T2.5"}; --Gloves of the Primordial Burrower  
