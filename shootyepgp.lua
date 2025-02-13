@@ -1204,16 +1204,17 @@ function sepgp:addonComms(prefix, message, channel, sender)
 
   -- Process BIDITEM messages to set bid item info on all clients and auto open bids window
   if string.sub(message, 1, 8) == "BIDITEM;" then
+    sepgp:clearBids(true)  -- Clear the bid window for everyone
     local s, e, bidItemLink = string.find(message, "BIDITEM;(.+)")
     if bidItemLink then
       sepgp.bid_item = sepgp.bid_item or {}
       sepgp.bid_item.linkFull = bidItemLink
       local found, _, itemColor, itemString, itemName = string.find(bidItemLink, "^(|c%x+)|H(.+)|h(%[.+%])")
       if found then
-         sepgp.bid_item.link = itemString
-         sepgp.bid_item.name = string.format("%s%s|r", itemColor, itemName)
+        sepgp.bid_item.link = itemString
+        sepgp.bid_item.name = string.format("%s%s|r", itemColor, itemName)
       end
-      -- Auto–open the bids window on all clients
+      -- Auto-open the bids window on all clients
       sepgp_bids:Toggle(true)
     end
     return
