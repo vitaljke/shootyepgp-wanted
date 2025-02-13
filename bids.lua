@@ -94,25 +94,14 @@ function sepgp_bids:Toggle(forceShow)
 end
 
 function sepgp_bids:announceWinnerMS(name, pr)
-  if not IsRaidLeader() then
-    -- Non–raid leaders cannot announce winners.
-    return
-  end
-  sepgp:widestAudience(string.format(L["Winning Mainspec Bid: %s (%.03f PR)"], name, pr))
+  sepgp:widestAudience(string.format(L["Winning Mainspec Bid: %s (%.03f PR)"],name,pr))
 end
 
 function sepgp_bids:announceWinnerOS(name, pr)
-  if not IsRaidLeader() then
-    return
-  end
-  sepgp:widestAudience(string.format(L["Winning Offspec Bid: %s (%.03f PR)"], name, pr))
+  sepgp:widestAudience(string.format(L["Winning Offspec Bid: %s (%.03f PR)"],name,pr))
 end
 
 function sepgp_bids:countdownCounter()
-  if not IsRaidLeader() then
-    -- Non–raid leaders cannot announce winners.
-    return
-  end
   self._counter = (self._counter or 6) - 1
   if GetNumRaidMembers()>0 and self._counter > 0 then
     self._counterText = C:Yellow(tostring(self._counter))
@@ -135,10 +124,6 @@ function sepgp_bids:countdownFinish(reset)
 end
 
 function sepgp_bids:bidCountdown()
-  if not IsRaidLeader() then
-    -- Non–raid leaders cannot announce winners.
-    return
-  end
   self:countdownFinish(true)
   self:ScheduleRepeatingEvent("shootyepgpBidCountdown",self.countdownCounter,1,self)
   self:ScheduleEvent("shootyepgpBidCountdownFinish",self.countdownFinish,6,self)
