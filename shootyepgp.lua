@@ -1197,85 +1197,52 @@ function sepgp:addonMessage(message,channel,sender)
   SendAddonMessage(self.VARS.prefix,message,channel,sender)
 end
 
-function sepgp:addonComms(prefix, message, channel, sender)
-  if prefix ~= self.VARS.prefix then return end
-  if sender == self._playerName then return end
-  if type(message) ~= "string" then return end
-
-  -- Process BIDITEM messages to set bid item info on all clients and auto open bids window
-  if string.sub(message, 1, 8) == "BIDITEM;" then
-    sepgp:clearBids(true)  -- Clear the bid window for everyone
-    local s, e, bidItemLink = string.find(message, "BIDITEM;(.+)")
-    if bidItemLink then
-      sepgp.bid_item = sepgp.bid_item or {}
-      sepgp.bid_item.linkFull = bidItemLink
-      local found, _, itemColor, itemString, itemName = string.find(bidItemLink, "^(|c%x+)|H(.+)|h(%[.+%])")
-      if found then
-        sepgp.bid_item.link = itemString
-        sepgp.bid_item.name = string.format("%s%s|r", itemColor, itemName)
-      end
-      -- Auto-open the bids window on all clients
-      sepgp_bids:Toggle(true)
-    end
-    return
+function sepgp:addonComms(prefix,message,channel,sender)
+  if not prefix == self.VARS.prefix then return end -- we don't care for messages from other addons
+  if sender == self._playerName then return end -- we don't care for messages from ourselves
+  local name_g,class,rank = self:verifyGuildMember(sender,true)
+  if not (name_g) then return end -- only accept messages from guild members
+  local who,what,amount
+  for name,epgp,change in string.gfind(message,"([^;]+);([^;]+);([^;]+)") do
+    who=name
+    what=epgp
+    amount=tonumber(change)
   end
-
-  -- Process BID messages from addon channel
-  if string.sub(message, 1, 4) == "BID;" then
-    local s, e, bidType, bidder = string.find(message, "BID;([^;]+);([^;]+)")
-    if bidType and bidder then
-      -- Check if this bidder's bid is already recorded; if so, ignore the duplicate.
-      if bids_blacklist[bidder] then
-        return
-      end
-      self:captureBid(bidType, bidder)
-    end
-    return
-  end
-
-  local name_g, class, rank = self:verifyGuildMember(sender, true)
-  if not name_g then return end
-  local who, what, amount
-  for name, epgp, change in string.gfind(message, "([^;]+);([^;]+);([^;]+)") do
-    who = name
-    what = epgp
-    amount = tonumber(change)
-  end
-  if who and what and amount then
+  if (who) and (what) and (amount) then
     local msg
     local for_main = (sepgp_main and (who == sepgp_main))
-    if (who == self._playerName) or for_main then
+    if (who == self._playerName) or (for_main) then
       if what == "EP" then
         if amount < 0 then
-          msg = string.format(L["You have received a %d EP penalty."], amount)
+          msg = string.format(L["You have received a %d EP penalty."],amount)
         else
-          msg = string.format(L["You have been awarded %d EP."], amount)
+          msg = string.format(L["You have been awarded %d EP."],amount)
         end
       elseif what == "GP" then
-        msg = string.format(L["You have gained %d GP."], amount)
+        msg = string.format(L["You have gained %d GP."],amount)
       end
     elseif who == "ALL" and what == "DECAY" then
-      msg = string.format(L["%s%% decay to EP and GP."], amount)
+      msg = string.format(L["%s%% decay to EP and GP."],amount)
     elseif who == "RAID" and what == "AWARD" then
-      msg = string.format(L["%d EP awarded to Raid."], amount)
+      msg = string.format(L["%d EP awarded to Raid."],amount)
     elseif who == "RESERVES" and what == "AWARD" then
-      msg = string.format(L["%d EP awarded to Reserves."], amount)
+      msg = string.format(L["%d EP awarded to Reserves."],amount)
     elseif who == "VERSION" then
-      local out_of_date, version_type = self:parseVersion(self._versionString, what)
-      if out_of_date and self._newVersionNotification == nil then
-        self._newVersionNotification = true
-        self:defaultPrint(string.format(L["New %s version available: |cff00ff00%s|r"], version_type, what))
-        self:defaultPrint(string.format(L["Visit https://github.com/Cinecom/shootyepgp/ to update."], self._websiteString))
+      local out_of_date, version_type = self:parseVersion(self._versionString,what)
+      if (out_of_date) and self._newVersionNotification == nil then
+        self._newVersionNotification = true -- only inform once per session
+        self:defaultPrint(string.format(L["New %s version available: |cff00ff00%s|r"],version_type,what))
+        self:defaultPrint(string.format(L["Visit %s to update."],self._websiteString))
       end
-      if IsGuildLeader() then
+      if (IsGuildLeader()) then
         self:shareSettings()
       end
     elseif who == "SETTINGS" then
-      for progress, discount, decay, minep, alts, altspct in string.gfind(what, "([^:]+):([^:]+):([^:]+):([^:]+):([^:]+):([^:]+)") do
+      for progress,discount,decay,minep,alts,altspct in string.gfind(what, "([^:]+):([^:]+):([^:]+):([^:]+):([^:]+):([^:]+)") do
         discount = tonumber(discount)
         decay = tonumber(decay)
         minep = tonumber(minep)
-        alts = (alts == "true")
+        alts = (alts == "true") and true or false
         altspct = tonumber(altspct)
         local settings_notice
         if progress and progress ~= sepgp_progress then
@@ -1284,8 +1251,8 @@ function sepgp:addonComms(prefix, message, channel, sender)
         end
         if discount and discount ~= sepgp_discount then
           sepgp_discount = discount
-          if settings_notice then
-            settings_notice = settings_notice .. L[", offspec price %"]
+          if (settings_notice) then
+            settings_notice = settings_notice..L[", offspec price %"]
           else
             settings_notice = L["New offspec price %"]
           end
@@ -1297,9 +1264,9 @@ function sepgp:addonComms(prefix, message, channel, sender)
         end
         if decay and decay ~= sepgp_decay then
           sepgp_decay = decay
-          if admin() then
-            if settings_notice then
-              settings_notice = settings_notice .. L[", decay %"]
+          if (admin()) then
+            if (settings_notice) then
+              settings_notice = settings_notice..L[", decay %"]
             else
               settings_notice = L["New decay %"]
             end
@@ -1307,45 +1274,40 @@ function sepgp:addonComms(prefix, message, channel, sender)
         end
         if alts ~= nil and alts ~= sepgp_altspool then
           sepgp_altspool = alts
-          if admin() then
-            if settings_notice then
-              settings_notice = settings_notice .. L[", alts"]
+          if (admin()) then
+            if (settings_notice) then
+              settings_notice = settings_notice..L[", alts"]
             else
               settings_notice = L["New Alts"]
             end
-          end
+          end          
         end
         if altspct and altspct ~= sepgp_altpercent then
           sepgp_altpercent = altspct
-          if admin() then
-            if settings_notice then
-              settings_notice = settings_notice .. L[", alts ep %"]
+          if (admin()) then
+            if (settings_notice) then
+              settings_notice = settings_notice..L[", alts ep %"]
             else
               settings_notice = L["New Alts EP %"]
             end
-          end
+          end          
         end
-        if settings_notice and settings_notice ~= "" then
-          local sender_rank = string.format("%s(%s)", C:Colorize(BC:GetHexColor(class), sender), rank)
-          settings_notice = settings_notice .. string.format(L[" settings accepted from %s"], sender_rank)
+        if (settings_notice) and settings_notice ~= "" then
+          local sender_rank = string.format("%s(%s)",C:Colorize(BC:GetHexColor(class),sender),rank)
+          settings_notice = settings_notice..string.format(L[" settings accepted from %s"],sender_rank)
           self:defaultPrint(settings_notice)
-          self._options.args["progress_tier_header"].name = string.format(L["Progress Setting: %s"], sepgp_progress)
-          self._options.args["set_discount_header"].name = string.format(L["Offspec Price: %s%%"], sepgp_discount * 100)
-          self._options.args["set_min_ep_header"].name = string.format(L["Minimum EP: %s"], sepgp_minep)
+          self._options.args["progress_tier_header"].name = string.format(L["Progress Setting: %s"],sepgp_progress)
+          self._options.args["set_discount_header"].name = string.format(L["Offspec Price: %s%%"],sepgp_discount*100)
+          self._options.args["set_min_ep_header"].name = string.format(L["Minimum EP: %s"],sepgp_minep)
         end
       end
     end
-    if msg and msg ~= "" then
+    if msg and msg~="" then
       self:defaultPrint(msg)
       self:my_epgp(for_main)
     end
   end
 end
-
-
-
-
-
 
 function sepgp:shareSettings(force)
   local now = GetTime()
@@ -1708,17 +1670,16 @@ sepgp.defaultPosition = "RIGHT"
 sepgp.cannotDetachTooltip = true
 sepgp.tooltipHiddenWhenEmpty = false
 sepgp.independentProfile = true
-function sepgp:OnTooltipUpdate()
-  local baseHint = L["|cffffff00Click|r to toggle Standings.%s \n|cffffff00Right-Click|r for Options."] or "|cffffff00Click|r to toggle Standings.%s \n|cffffff00Right-Click|r for Options."
-  local extraHint = ""
-  if admin() then
-    extraHint = L[" \n|cffffff00Ctrl+Click|r to toggle Reserves. \n|cffffff00Alt+Click|r to toggle Bids. \n|cffffff00Shift+Click|r to toggle Loot. \n|cffffff00Ctrl+Alt+Click|r to toggle Alts. \n|cffffff00Ctrl+Shift+Click|r to toggle Logs."] or " \nCtrl+Click to toggle Reserves. \nAlt+Click to toggle Bids. \nShift+Click to toggle Loot. \nCtrl+Alt+Click to toggle Alts. \nCtrl+Shift+Click to toggle Logs."
-  else
-    extraHint = L[" \n|cffffff00Alt+Click|r to toggle Bids."] or " \n|cffffff00Alt+Click|r to toggle Bids."
-  end
-  T:SetHint(string.format(baseHint, extraHint))
-end
 
+function sepgp:OnTooltipUpdate()
+  local hint = L["|cffffff00Click|r to toggle Standings.%s \n|cffffff00Right-Click|r for Options."]
+  if (admin()) then
+    hint = string.format(hint,L[" \n|cffffff00Ctrl+Click|r to toggle Reserves. \n|cffffff00Alt+Click|r to toggle Bids. \n|cffffff00Shift+Click|r to toggle Loot. \n|cffffff00Ctrl+Alt+Click|r to toggle Alts. \n|cffffff00Ctrl+Shift+Click|r to toggle Logs."])
+  else
+    hint = string.format(hint,"")
+  end
+  T:SetHint(hint)
+end
 
 function sepgp:OnClick()
   local is_admin = admin()
@@ -1730,13 +1691,12 @@ function sepgp:OnClick()
     sepgp_reserves:Toggle()
   elseif (IsShiftKeyDown() and is_admin) then
     sepgp_loot:Toggle()      
-  elseif (IsAltKeyDown()) then
+  elseif (IsAltKeyDown() and is_admin) then
     sepgp_bids:Toggle()
   else
     sepgp_standings:Toggle()
   end
 end
-
 
 function sepgp:SetRefresh(flag)
   needRefresh = flag
@@ -1998,55 +1958,50 @@ lootCall.bs = { -- blacklist
 }
 function sepgp:captureLootCall(text, sender)
   if not (string.find(text, "|Hitem:", 1, true)) then return end
-  local linkstriptext, count = string.gsub(text, "|c%x+|H[eimt:%d]+|h%[[%w%s',%-]+%]|h|r", " ; ")
+  local linkstriptext, count = string.gsub(text,"|c%x+|H[eimt:%d]+|h%[[%w%s',%-]+%]|h|r"," ; ")
   if count > 1 then return end
   local lowtext = string.lower(linkstriptext)
   local whisperkw_found, mskw_found, oskw_found, link_found, blacklist_found
-  for _, f in ipairs(lootCall.bs) do
-    blacklist_found = string.find(lowtext, f)
-    if blacklist_found then return end
+  for _,f in ipairs(lootCall.bs) do
+    blacklist_found = string.find(lowtext,f)
+    if (blacklist_found) then return end
   end
   local _, itemLink, itemColor, itemString, itemName
-  for _, f in ipairs(lootCall.whisp) do
-    whisperkw_found = string.find(lowtext, f)
-    if whisperkw_found then break end
+  for _,f in ipairs(lootCall.whisp) do
+    whisperkw_found = string.find(lowtext,f)
+    if (whisperkw_found) then break end
   end
-  for _, f in ipairs(lootCall.ms) do
-    mskw_found = string.find(lowtext, f)
-    if mskw_found then break end
+  for _,f in ipairs(lootCall.ms) do
+    mskw_found = string.find(lowtext,f)
+    if (mskw_found) then break end
   end
-  for _, f in ipairs(lootCall.os) do
-    oskw_found = string.find(lowtext, f)
-    if oskw_found then break end
+  for _,f in ipairs(lootCall.os) do
+    oskw_found = string.find(lowtext,f)
+    if (oskw_found) then break end
   end
-  if whisperkw_found or mskw_found or oskw_found then
-    _,_,itemLink = string.find(text, "(|c%x+|H[eimt:%d]+|h%[[%w%s',%-]+%]|h|r)")
-    if itemLink and itemLink ~= "" then
+  if (whisperkw_found) or (mskw_found) or (oskw_found) then
+    _,_,itemLink = string.find(text,"(|c%x+|H[eimt:%d]+|h%[[%w%s',%-]+%]|h|r)")
+    if (itemLink) and (itemLink ~= "") then
       link_found, _, itemColor, itemString, itemName = string.find(itemLink, "^(|c%x+)|H(.+)|h(%[.+%])")
     end
-    if link_found then
+    if (link_found) then
       local quality = hexColorQuality[itemColor] or -1
-      if quality >= 3 then
-        if sender == self._playerName then
+      if (quality >= 3) then
+        if (IsRaidLeader() or self:lootMaster()) and (sender == self._playerName) then
           self:clearBids(true)
-          sepgp.bid_item = {}
           sepgp.bid_item.link = itemString
           sepgp.bid_item.linkFull = itemLink
-          sepgp.bid_item.name = string.format("%s%s|r", itemColor, itemName)
-          self:ScheduleEvent("shootyepgpBidTimeout", self.clearBids, 300, self)
+          sepgp.bid_item.name = string.format("%s%s|r",itemColor,itemName)
+          self:ScheduleEvent("shootyepgpBidTimeout",self.clearBids,300,self)
           running_bid = true
           self:debugPrint("Capturing Bids for 5min.")
           sepgp_bids:Toggle(true)
-          -- Broadcast BIDITEM info so all clients open their bids window.
-          self:addonMessage("BIDITEM;" .. itemLink, "RAID")
         end
-        self:bidPrint(itemLink, sender, mskw_found, oskw_found, whisperkw_found)
+        self:bidPrint(itemLink,sender,mskw_found,oskw_found,whisperkw_found)
       end
     end
   end
 end
-
-
 
 local lootBid = {}
 lootBid.ms = {"(%+)",".+(%+).*",".*(%+).+",".*(%+).*","(ms)","(need)"}
@@ -2055,26 +2010,29 @@ lootBid.msos = {".*[oO][sS][pP][rR][iI][oO].*"}
 
 
 function sepgp:captureBid(text, sender)
-  -- For any bid we immediately ensure the bids window is shown.
-  if not running_bid then
-    running_bid = true
-    sepgp_bids:Toggle(true)
-  end
-  if not sepgp.bid_item or not sepgp.bid_item.link then return end
+  if not running_bid then return end
+  if not (IsRaidLeader() or self:lootMaster()) then return end
+  if not sepgp.bid_item.link then return end
 
   local mskw_found, oskw_found, msoskw_found
+
+  -- Check for + (mainspec)
   for _, f in ipairs(lootBid.ms) do
     if string.find(text, f) then
       mskw_found = true
       break
     end
   end
+
+  -- Check for - (offspec)
   for _, f in ipairs(lootBid.os) do
     if string.find(text, f) then
       oskw_found = true
       break
     end
   end
+
+  -- Check for OSPRIO
   for _, f in ipairs(lootBid.msos) do
     if string.find(text, f) then
       msoskw_found = true
@@ -2082,49 +2040,63 @@ function sepgp:captureBid(text, sender)
     end
   end
 
-  if (mskw_found or oskw_found or msoskw_found) and not bids_blacklist[sender] then
-    -- Forward bid via addon channel (so that all raid members get it)
-    if string.sub(text, 1, 4) ~= "BID;" then
-      local bidType = mskw_found and "+" or oskw_found and "-" or msoskw_found and "OSPRIO" or ""
-      if bidType ~= "" then
-         self:addonMessage("BID;" .. bidType .. ";" .. sender, "RAID")
-      end
-    end
+  if mskw_found or oskw_found or msoskw_found then
+    if self:inRaid(sender) and not bids_blacklist[sender] then
+      local prio_flag = "OSPRIO"
+      for i = 1, GetNumGuildMembers() do
+        local name, _, _, _, class, _, note, officernote, _, _ = GetGuildRosterInfo(i)
+        if name == sender then
+          local ep = (self:get_ep_v3(name, officernote) or 0)
+          local gp = (self:get_gp_v3(name, officernote) or sepgp.VARS.basegp)
+          local main_name
 
-    local prio_flag = "OSPRIO"
-    for i = 1, GetNumGuildMembers() do
-      local name, _, _, _, class, _, note, officernote, _, _ = GetGuildRosterInfo(i)
-      if name == sender then
-        local ep = (self:get_ep_v3(name, officernote) or 0)
-        local gp = (self:get_gp_v3(name, officernote) or sepgp.VARS.basegp)
-        local main_name = ""
-        if sepgp_altspool then
-          local alt_main, alt_class, _, alt_officernote = self:parseAlt(name, officernote)
-          if alt_main then
-            ep = (self:get_ep_v3(alt_main, alt_officernote) or 0)
-            gp = (self:get_gp_v3(alt_main, alt_officernote) or sepgp.VARS.basegp)
-            main_name = alt_main
+          -- If pooling alts into main's EPGP
+          if sepgp_altspool then
+            local alt_main, alt_class, _, alt_officernote = self:parseAlt(name, officernote)
+            if alt_main then
+              ep = (self:get_ep_v3(alt_main, alt_officernote) or 0)
+              gp = (self:get_gp_v3(alt_main, alt_officernote) or sepgp.VARS.basegp)
+              main_name = alt_main
+            end
           end
+
+          -- Mark them so we don't double-add
+          bids_blacklist[sender] = true
+
+          if mskw_found then
+            -- It's a + (Mainspec)
+            if main_name then
+              table.insert(sepgp.bids_main, {name, class, ep, gp, ep / gp, main_name, ""})
+            else
+              table.insert(sepgp.bids_main, {name, class, ep, gp, ep / gp, "", ""})
+            end
+
+          elseif oskw_found then
+            -- It's a - (Offspec)
+            if main_name then
+              table.insert(sepgp.bids_off, {name, class, ep, gp, ep / gp, main_name, ""})
+            else
+              table.insert(sepgp.bids_off, {name, class, ep, gp, ep / gp, "", ""})
+            end
+
+          elseif msoskw_found then
+            -- It's OSPRIO -> Also place in the Offspec table,
+            -- but with "OSPRIO" flag so we can detect it in the GUI
+            if main_name then
+              table.insert(sepgp.bids_off, {name, class, ep, gp, ep / gp, main_name, prio_flag})
+            else
+              table.insert(sepgp.bids_off, {name, class, ep, gp, ep / gp, "", prio_flag})
+            end
+          end
+
+          -- Refresh the bids window
+          sepgp_bids:Toggle(true)
+          return
         end
-
-        bids_blacklist[sender] = true
-
-        if mskw_found then
-          table.insert(sepgp.bids_main, {name, class, ep, gp, ep / gp, main_name, ""})
-        elseif oskw_found then
-          table.insert(sepgp.bids_off, {name, class, ep, gp, ep / gp, main_name, ""})
-        elseif msoskw_found then
-          table.insert(sepgp.bids_off, {name, class, ep, gp, ep / gp, main_name, prio_flag})
-        end
-
-        sepgp_bids:Toggle(true)
-        return
       end
     end
   end
 end
-
-
 
 function sepgp:clearBids(reset)
   if reset~=nil then
