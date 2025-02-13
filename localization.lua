@@ -323,7 +323,7 @@ L:RegisterTranslations("zhCN", function() return {
   ["%d EP awarded to Raid."] = "%d EP 授予团队.",
   ["%d EP awarded to Reserves."] = "%d EP 授予替补队员.",
   ["New %s version available: |cff00ff00%s|r"] = "新的 %s 版本可用: |cff00ff00%s|r",
-  ["Visit %s to update."] = "访问 %s 升级.",
+  ["Visit https://github.com/Cinecom/shootyepgp/ to update."] = "访问 https://github.com/Cinecom/shootyepgp/ 升级.",
   ["New raid progress"] = "新的RAID进度",
   [", offspec price %"] = ", 副天赋价格 %",
   ["New offspec price %"] = "新的副天赋价格 %",
