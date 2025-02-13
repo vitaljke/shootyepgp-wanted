@@ -1219,9 +1219,14 @@ function sepgp:addonComms(prefix, message, channel, sender)
     return
   end
 
+  -- Process BID messages from addon channel
   if string.sub(message, 1, 4) == "BID;" then
     local s, e, bidType, bidder = string.find(message, "BID;([^;]+);([^;]+)")
     if bidType and bidder then
+      -- Check if this bidder's bid is already recorded; if so, ignore the duplicate.
+      if bids_blacklist[bidder] then
+        return
+      end
       self:captureBid(bidType, bidder)
     end
     return
