@@ -2,7 +2,7 @@ local prices = {
     -----------------
     --- Naxxramas ---
     -----------------
-
+  [22349] = {120,"T3"}; --T3 Desecrated Breastplate
   [55583] = {80,"T3"}; --T3 Desecrated Signet
   [55582] = {80,"T3"}; --T3 Desecrated Seal  
   [55581] = {80,"T3"}; --T3 Desecrated Ring
