@@ -1197,41 +1197,58 @@ function sepgp:addonMessage(message,channel,sender)
   SendAddonMessage(self.VARS.prefix,message,channel,sender)
 end
 
+epgp_public = true
+
+SLASH_PUBLIC1 = "/public"
+SlashCmdList["PUBLIC"] = function(msg)
+  if msg == "off" then
+    epgp_public = false
+    DEFAULT_CHAT_FRAME:AddMessage("Public Bid |cffff0000OFF|r")
+  elseif msg == "on" then
+    epgp_public = true
+    DEFAULT_CHAT_FRAME:AddMessage("Public Bid |cff00ff00ON|r")
+  else
+    DEFAULT_CHAT_FRAME:AddMessage("Append with |cff00ff00ON|r or |cffff0000OFF|r")
+  end
+end
+
+
 function sepgp:addonComms(prefix, message, channel, sender)
   if prefix ~= self.VARS.prefix then return end
   if sender == self._playerName then return end
   if type(message) ~= "string" then return end
 
-  -- Process BIDITEM messages to set bid item info on all clients and auto open bids window
-  if string.sub(message, 1, 8) == "BIDITEM;" then
-    sepgp:clearBids(true)  -- Clear the bid window for everyone
-    local s, e, bidItemLink = string.find(message, "BIDITEM;(.+)")
-    if bidItemLink then
-      sepgp.bid_item = sepgp.bid_item or {}
-      sepgp.bid_item.linkFull = bidItemLink
-      local found, _, itemColor, itemString, itemName = string.find(bidItemLink, "^(|c%x+)|H(.+)|h(%[.+%])")
-      if found then
-        sepgp.bid_item.link = itemString
-        sepgp.bid_item.name = string.format("%s%s|r", itemColor, itemName)
+    -- Process BIDITEM messages to set bid item info on all clients and auto open bids window
+    if string.sub(message, 1, 8) == "BIDITEM;" then
+      sepgp:clearBids(true)  -- Clear the bid window for everyone
+      local s, e, bidItemLink = string.find(message, "BIDITEM;(.+)")
+      if bidItemLink then
+        sepgp.bid_item = sepgp.bid_item or {}
+        sepgp.bid_item.linkFull = bidItemLink
+        local found, _, itemColor, itemString, itemName = string.find(bidItemLink, "^(|c%x+)|H(.+)|h(%[.+%])")
+        if found then
+          sepgp.bid_item.link = itemString
+          sepgp.bid_item.name = string.format("%s%s|r", itemColor, itemName)
+        end
+        -- Auto-open the bids window on all clients
+        sepgp_bids:Toggle(true)
       end
-      -- Auto-open the bids window on all clients
-      sepgp_bids:Toggle(true)
+      return
     end
-    return
-  end
 
-  -- Process BID messages from addon channel
-  if string.sub(message, 1, 4) == "BID;" then
-    local s, e, bidType, bidder = string.find(message, "BID;([^;]+);([^;]+)")
-    if bidType and bidder then
-      -- Check if this bidder's bid is already recorded; if so, ignore the duplicate.
-      if bids_blacklist[bidder] then
-        return
+    -- Process BID messages from addon channel
+    if string.sub(message, 1, 4) == "BID;" then
+      local s, e, bidType, bidder = string.find(message, "BID;([^;]+);([^;]+)")
+      if bidType and bidder then
+        -- Check if this bidder's bid is already recorded; if so, ignore the duplicate.
+        if bids_blacklist[bidder] then
+          return
+        end
+        self:captureBid(bidType, bidder)
       end
-      self:captureBid(bidType, bidder)
+      return
     end
-    return
-  end
+
 
   local name_g, class, rank = self:verifyGuildMember(sender, true)
   if not name_g then return end
@@ -2055,12 +2072,14 @@ lootBid.msos = {".*[oO][sS][pP][rR][iI][oO].*"}
 
 
 function sepgp:captureBid(text, sender)
-  -- For any bid we immediately ensure the bids window is shown.
+  -- For any bid, immediately open the bids window.
   if not running_bid then
     running_bid = true
     sepgp_bids:Toggle(true)
   end
-  if not sepgp.bid_item or not sepgp.bid_item.link then return end
+  if not sepgp.bid_item or not sepgp.bid_item.link then 
+    return 
+  end
 
   local mskw_found, oskw_found, msoskw_found
   for _, f in ipairs(lootBid.ms) do
@@ -2083,13 +2102,16 @@ function sepgp:captureBid(text, sender)
   end
 
   if (mskw_found or oskw_found or msoskw_found) and not bids_blacklist[sender] then
-    -- Forward bid via addon channel (so that all raid members get it)
-    if string.sub(text, 1, 4) ~= "BID;" then
-      local bidType = mskw_found and "+" or oskw_found and "-" or msoskw_found and "OSPRIO" or ""
-      if bidType ~= "" then
-         self:addonMessage("BID;" .. bidType .. ";" .. sender, "RAID")
+    -- Only forward the bid if public bidding is enabled.
+    if epgp_public then
+      if string.sub(text, 1, 4) ~= "BID;" then
+        local bidType = mskw_found and "+" or oskw_found and "-" or msoskw_found and "OSPRIO" or ""
+        if bidType ~= "" then
+          self:addonMessage("BID;" .. bidType .. ";" .. sender, "RAID")
+        end
       end
     end
+
 
     local prio_flag = "OSPRIO"
     for i = 1, GetNumGuildMembers() do
@@ -2123,6 +2145,7 @@ function sepgp:captureBid(text, sender)
     end
   end
 end
+
 
 
 
