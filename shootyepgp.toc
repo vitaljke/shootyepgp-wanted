@@ -1,5 +1,5 @@
 ## Interface: 11200
-## Title: shootyepgp | |cff808080<ERROR> edition / Twopants edition|r
+## Title: shootyepgp | |cff808080<ERROR> / Twopants edition|r
 ## Title-zhCN: shootyepgp EPGP插件 | |cff808080<ERROR> / Twopants edition|r
 ## Notes: Effort Points/Gear Points Loot System
 ## Notes-zhCN: 贡献点/装备点拾取制度系统
