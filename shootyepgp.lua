@@ -1011,26 +1011,20 @@ function sepgp:bidPrint(link, masterlooter, need, greed, bid)
   PlaySoundFile("Interface\\AddOns\\shootyepgp\\Sounds\\loot.wav")
 
   -- Decide which placeholders to keep/remove based on need/greed/bid
-  if (need and greed) then
+  if (need and greed) or bid then
     -- Keep all three
-    msg = string.gsub(msg, "$MS",   mslink)
+    msg = string.gsub(msg, "$MS", mslink)
     msg = string.gsub(msg, "$PRIOOS", priooslink)
-    msg = string.gsub(msg, "$OS",   oslink)
-  elseif (need) then
-    -- Only show MS + MSOS, remove the OS part
-    msg = string.gsub(msg, "$MS",   mslink)
-    msg = string.gsub(msg, "$PRIOOS", priooslink)
-    msg = string.gsub(msg, " or $OS", "")
-  elseif (greed) then
-    -- Only show OS, remove MS + MSOS
     msg = string.gsub(msg, "$OS", oslink)
-    -- remove "$MS or $MSOS or " (or your exact localized phrase)
-    msg = string.gsub(msg, "$MS or $PRIOOS or ", "")
-  elseif (bid) then
-    -- If 'bid' is true, we keep all (same as need+greed)
-    msg = string.gsub(msg, "$MS",   mslink)
+  elseif (need) then
+    -- Only show MS, remove the others
+    msg = string.gsub(msg, "$MS", mslink)
+    msg = string.gsub(msg, " or $PRIOOS or $OS", "")
+  elseif (greed) then
+    -- Only show OS and PRIOOS, remove MS
     msg = string.gsub(msg, "$PRIOOS", priooslink)
-    msg = string.gsub(msg, "$OS",   oslink)
+    msg = string.gsub(msg, "$OS", oslink)
+    msg = string.gsub(msg, "$MS or ", "")
   end
 
   -- If there's still an un-replaced placeholder, exit
