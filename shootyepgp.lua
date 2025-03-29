@@ -1,24 +1,3 @@
--- 1) Register a new slash command /parseid
-SLASH_PARSEID1 = "/parseid"
-
--- 2) Command handler function
-SlashCmdList["PARSEID"] = function(msg)
-  -- Example input might be:
-  -- |cffa335ee|Hitem:12345:0:0:0|h[Some Item]|h|r
-
-  -- Use string.find to capture the digits after "Hitem:"
-  local _, _, itemID = string.find(msg, "Hitem:(%d+)")
-  
-  if itemID then
-    DEFAULT_CHAT_FRAME:AddMessage("Item ID is: " .. itemID)
-  else
-    DEFAULT_CHAT_FRAME:AddMessage(
-      "No item ID found. Make sure to shift-click an actual item link.\nReceived: " .. (msg or "nil")
-    )
-  end
-end
-
-
 sepgp = AceLibrary("AceAddon-2.0"):new("AceConsole-2.0", "AceHook-2.1", "AceDB-2.0", "AceDebug-2.0", "AceEvent-2.0", "AceModuleCore-2.0", "FuBarPlugin-2.0")
 sepgp:SetModuleMixins("AceDebug-2.0")
 local D = AceLibrary("Dewdrop-2.0")
