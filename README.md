@@ -1,5 +1,5 @@
 # Fork for the < ERROR > guild (Turtle WoW)
-- Displays Player Rank
+- Displays Player Rank in bid window and in a /roll
 - Corrected Pricelist including custom Turtle WoW items
 - Shows item ID's
 - Ability to look up an item's ID by typing ``/parseid [ITEM_LINK]`` in game
