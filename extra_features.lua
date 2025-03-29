@@ -15,50 +15,69 @@ SlashCmdList["PARSEID"] = function(msg)
 end
 
 
--- SHOW RANK IN ROLL
--- Hook the chat event for roll results
-local origSystemMessage = ChatFrame_MessageEventHandler
-function ChatFrame_MessageEventHandler(self, event, message, ...)
-    -- Check if it's a roll message
-    if event == "CHAT_MSG_SYSTEM" then
-        -- Pattern to match roll messages: "PlayerName rolls X (1-Y)"
-        local playerName, roll, range = string.match(message, "^([^%s]+) rolls (%d+) %(1%-(%d+)%)$")
+
+-- Guild Rank for Roll Messages - 1.12 Compatible Version
+
+-- Create frame to catch events
+local f = CreateFrame("Frame")
+f:RegisterEvent("CHAT_MSG_SYSTEM")
+
+-- Function to get guild rank
+local function GetGuildRankForPlayer(name)
+    if not IsInGuild() then return nil end
+    
+    GuildRoster() -- Update guild data
+    local numMembers = GetNumGuildMembers(true)
+    
+    for i = 1, numMembers do
+        local memberName, rank = GetGuildRosterInfo(i)
+        -- Remove server name if present
+        local shortName = memberName
+        local dashPos = string.find(memberName or "", "-")
+        if dashPos then
+            shortName = string.sub(memberName, 1, dashPos - 1)
+        end
         
-        if playerName and roll then
-            -- Get player's guild information
-            local guildRank = GetGuildRankForPlayer(playerName)
+        if shortName == name then
+            return rank
+        end
+    end
+    return nil
+end
+
+-- Store the original function
+local originalChatFrame_OnEvent = ChatFrame_OnEvent
+
+-- Replace the event handler to filter out the original roll message
+ChatFrame_OnEvent = function(event)
+    if event == "CHAT_MSG_SYSTEM" then
+        local message = arg1
+        if message then
+            local _, _, name, roll, range = string.find(message, "^([^%s]+) rolls (%d+) %(1%-(%d+)%)$")
             
-            if guildRank then
-                -- Modify message to include guild rank
-                local newMessage = playerName .. " <" .. guildRank .. "> rolls " .. roll .. " (1-" .. range .. ")"
-                -- Call original handler with modified message
-                return origSystemMessage(self, event, newMessage, ...)
+            if name and roll then
+                local rank = GetGuildRankForPlayer(name)
+                
+                -- Create the modified message - always color the roll number green
+                local modifiedMessage
+                
+                if rank and rank ~= "" then
+                    -- Include rank for guild members
+                    modifiedMessage = name .. " <" .. rank .. "> rolls |cFF00FF00" .. roll .. "|r (1-" .. range .. ")"
+                else
+                    -- No rank, but still color the number
+                    modifiedMessage = name .. " rolls |cFF00FF00" .. roll .. "|r (1-" .. range .. ")"
+                end
+                
+                -- Display the message with proper yellow system color
+                DEFAULT_CHAT_FRAME:AddMessage(modifiedMessage, 1, 1, 0)
+                
+                -- Skip original message
+                return
             end
         end
     end
     
     -- Call original handler for all other messages
-    return origSystemMessage(self, event, message, ...)
-end
-
--- Helper function to get guild rank for a player
-function GetGuildRankForPlayer(playerName)
-    -- Make sure we're in a guild
-    if not IsInGuild() then
-        return nil
-    end
-    
-    -- Check if player is in our guild
-    local numGuildMembers = GetNumGuildMembers()
-    for i = 1, numGuildMembers do
-        local name, rank = GetGuildRosterInfo(i)
-        -- Strip realm name if present
-        name = string.match(name, "([^-]+)") or name
-        
-        if name == playerName then
-            return rank
-        end
-    end
-    
-    return nil
+    originalChatFrame_OnEvent(event)
 end
