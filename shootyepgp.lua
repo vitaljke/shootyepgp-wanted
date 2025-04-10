@@ -331,7 +331,7 @@ function sepgp:buildMenu()
           sepgp:shareSettings(true)
         end
       end,
-      validate = { ["T3.5"] = L["Tower of Karazhan"], ["T3"]=L["4.Naxxramas"], ["T2.5"]=L["3.Temple of Ahn\'Qiraj"], ["T2"]=L["2.Blackwing Lair"], ["T1"]=L["1.Molten Core"]},
+      validate = { ["T3.5"]=L["5.Tower of Karazhan"], ["T3"]=L["4.Naxxramas"], ["T2.5"]=L["3.Temple of Ahn\'Qiraj"], ["T2"]=L["2.Blackwing Lair"], ["T1"]=L["1.Molten Core"]},
     }
     options.args["report_channel"] = {
       type = "text",
