@@ -331,7 +331,7 @@ function sepgp:buildMenu()
           sepgp:shareSettings(true)
         end
       end,
-      validate = { ["T3"]=L["4.Naxxramas"], ["T2.5"]=L["3.Temple of Ahn\'Qiraj"], ["T2"]=L["2.Blackwing Lair"], ["T1"]=L["1.Molten Core"]},
+      validate = { ["T3.5"] = L["Tower of Karazhan"], ["T3"]=L["4.Naxxramas"], ["T2.5"]=L["3.Temple of Ahn\'Qiraj"], ["T2"]=L["2.Blackwing Lair"], ["T1"]=L["1.Molten Core"]},
     }
     options.args["report_channel"] = {
       type = "text",
@@ -2260,13 +2260,51 @@ function sepgp:make_escable(framename,operation)
   end
 end
 
-local raidZones = {[L["Molten Core"]]="T1",[L["Onyxia\'s Lair"]]="T1.5",[L["Blackwing Lair"]]="T2",[L["Ahn\'Qiraj"]]="T2.5",[L["Naxxramas"]]="T3"}
+local raidZones = {[L["Molten Core"]]="T1",[L["Onyxia\'s Lair"]]="T1.5",[L["Blackwing Lair"]]="T2",[L["Ahn\'Qiraj"]]="T2.5",[L["Naxxramas"]]="T3",[L["Tower of Karazhan"]]="T3.5"}
+-- Updated zone_multipliers table with added "T3.5" columns and a new row for raid progress "T3.5":
 local zone_multipliers = {
-  ["T3"] =   {["T3"]=1,["T2.5"]=0.75,["T2"]=0.5,["T1.5"]=0.25,["T1"]=0.25},
-  ["T2.5"] = {["T3"]=1,["T2.5"]=1,   ["T2"]=0.7,["T1.5"]=0.4, ["T1"]=0.4},
-  ["T2"] =   {["T3"]=1,["T2.5"]=1,   ["T2"]=1,  ["T1.5"]=0.5, ["T1"]=0.5},
-  ["T1"] =   {["T3"]=1,["T2.5"]=1,   ["T2"]=1,  ["T1.5"]=1,   ["T1"]=1}
+  ["T3.5"] = {
+    ["T3.5"] = 1,
+    ["T3"]   = 0.8,
+    ["T2.5"] = 0.65,
+    ["T2"]   = 0.5,
+    ["T1.5"] = 0.3,
+    ["T1"]   = 0.3
+  },
+  ["T3"] = {
+    ["T3.5"] = 1,
+    ["T3"]   = 1,
+    ["T2.5"] = 0.75,
+    ["T2"]   = 0.5,
+    ["T1.5"] = 0.25,
+    ["T1"]   = 0.25
+  },
+  ["T2.5"] = {
+    ["T3.5"] = 1,
+    ["T3"]   = 1,
+    ["T2.5"] = 1,
+    ["T2"]   = 0.7,
+    ["T1.5"] = 0.4,
+    ["T1"]   = 0.4
+  },
+  ["T2"] = {
+    ["T3.5"] = 1,
+    ["T3"]   = 1,
+    ["T2.5"] = 1,
+    ["T2"]   = 1,
+    ["T1.5"] = 0.5,
+    ["T1"]   = 0.5
+  },
+  ["T1"] = {
+    ["T3.5"] = 1,
+    ["T3"]   = 1,
+    ["T2.5"] = 1,
+    ["T2"]   = 1,
+    ["T1.5"] = 1,
+    ["T1"]   = 1
+  }
 }
+
 function sepgp:suggestedAwardEP()
   local currentTier, zoneEN, zoneLoc, checkTier, multiplier
   local inInstance, instanceType = IsInInstance()

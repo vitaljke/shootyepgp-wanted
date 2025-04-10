@@ -1,4 +1,33 @@
 local prices = {
+
+    -----------------
+    --- Kara40    ---
+    -----------------
+
+  [55078] = {0,"T3.5"}; --Ley-attuned Chocker
+  [55084] = {200,"T3.5"}; --Torn Wings of Midnight
+  [55081] = {0,"T3.5"}; --Manadrenched Feather Slippers
+  [55079] = {300,"T3.5"}; --Ravenkeeper's Frenzied Embrace
+  [55082] = {100,"T3.5"}; --Idol of Laceration
+  [55083] = {300,"T3.5"}; --Crown of the Wildpack
+
+  [55091] = {200,"T3.5"}; --Loop of Infused Renewal
+  [41403] = {0,"T3.5"}; --Enchanted Amethyst
+  [55507] = {250,"T3.5"}; --Choker of Terminal Arcanum
+
+  [55483] = {150,"T3.5"}; --Ethereal Boots of Conquest
+  [55484] = {150,"T3.5"}; --Ethereal Boots of Ascendancy
+  [55485] = {150,"T3.5"}; --Shifting Mantle of Conquest
+  [55486] = {150,"T3.5"}; --Shifting Mantle of Ascendancy
+  [55487] = {150,"T3.5"}; --Fractured Crown of Conquest
+  [55488] = {150,"T3.5"}; --Fractured Crown of Ascendancy
+  [55489] = {150,"T3.5"}; --Brutal Leggings of Conquest
+  [55490] = {150,"T3.5"}; --Brutal Leggings of Ascendancy
+  [55491] = {150,"T3.5"}; --Nathrezim Armor of Treachery
+  [55492] = {150,"T3.5"}; --Nathrezim Armor of Deceit
+
+  [55579] = {0,"T3.5"}; --Hearth of Mephistroth
+
     -----------------
     --- Naxxramas ---
     -----------------
@@ -784,10 +813,11 @@ sepgp.gp_prices = prices
   ["T3"] = 9
 }]]
 local progress_scaling = {
-  ["T3"] =   {["T3"]=1,  ["T2.5"]=1,  ["T2"]=1,  ["T1.5"]=1,["T1"]=1},
-  ["T2.5"] = {["T3"]=1,["T2.5"]=1,["T2"]=1,  ["T1.5"]=1,["T1"]=1},
-  ["T2"] =   {["T3"]=1,  ["T2.5"]=1,  ["T2"]=1,  ["T1.5"]=1,["T1"]=1},
-  ["T1"] =   {["T3"]=1,["T2.5"]=1,["T2"]=1,["T1.5"]=1,["T1"]=1}
+  ["T3.5"] = {["T3.5"]=1, ["T3"]=1, ["T2.5"]=1, ["T2"]=1, ["T1.5"]=1, ["T1"]=1},
+  ["T3"] =   {["T3.5"]=1, ["T3"]=1, ["T2.5"]=1, ["T2"]=1, ["T1.5"]=1, ["T1"]=1},
+  ["T2.5"] = {["T3.5"]=1, ["T3"]=1, ["T2.5"]=1, ["T2"]=1, ["T1.5"]=1, ["T1"]=1},
+  ["T2"] =   {["T3.5"]=1, ["T3"]=1, ["T2.5"]=1, ["T2"]=1, ["T1.5"]=1, ["T1"]=1},
+  ["T1"] =   {["T3.5"]=1, ["T3"]=1, ["T2.5"]=1, ["T2"]=1, ["T1.5"]=1, ["T1"]=1}
 }
 local function get_adjusted_price(price,tier,progress)
   if not progress_scaling[progress] then return price end
