@@ -3,18 +3,24 @@ local prices = {
     -----------------
     --- Kara40    ---
     -----------------
-
+  --Gnarlkeeper
   [55078] = {0,"T3.5"}; --Ley-attuned Chocker
   [55084] = {200,"T3.5"}; --Torn Wings of Midnight
   [55081] = {0,"T3.5"}; --Manadrenched Feather Slippers
   [55079] = {300,"T3.5"}; --Ravenkeeper's Frenzied Embrace
   [55082] = {100,"T3.5"}; --Idol of Laceration
   [55083] = {300,"T3.5"}; --Crown of the Wildpack
+  [55080] = {350,"T3.5"}; --Bloodmoon, Sickle of the Murderous Flight
+  [55084] = {200,"T3.5"}; --Torn Wings of Midnight
 
+  --Incantos  
   [55091] = {200,"T3.5"}; --Loop of Infused Renewal
   [41403] = {0,"T3.5"}; --Enchanted Amethyst
   [55507] = {250,"T3.5"}; --Choker of Terminal Arcanum
+  [55089] = {300,"T3.5"}; --Bands of the Surgebreaker
+  [55087] = {400,"T3.5"}; --Jewel of Wild Magics
 
+  --Tier Tokens  
   [55483] = {150,"T3.5"}; --Ethereal Boots of Conquest
   [55484] = {150,"T3.5"}; --Ethereal Boots of Ascendancy
   [55485] = {150,"T3.5"}; --Shifting Mantle of Conquest
@@ -26,8 +32,13 @@ local prices = {
   [55491] = {150,"T3.5"}; --Nathrezim Armor of Treachery
   [55492] = {150,"T3.5"}; --Nathrezim Armor of Deceit
 
+  --Final Boss
   [55579] = {0,"T3.5"}; --Hearth of Mephistroth
+ 
+  -- Trash
+  [55284] = {300,"T3.5"}; --Dragunovi's Sash of Domination
 
+    
     -----------------
     --- Naxxramas ---
     -----------------
