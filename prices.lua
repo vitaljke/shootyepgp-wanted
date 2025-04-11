@@ -3,6 +3,7 @@ local prices = {
     -----------------
     --- Kara40    ---
     -----------------
+
   --Gnarlkeeper
   [55078] = {0,"T3.5"}; --Ley-attuned Chocker
   [55084] = {200,"T3.5"}; --Torn Wings of Midnight
@@ -37,7 +38,8 @@ local prices = {
  
   -- Trash
   [55284] = {300,"T3.5"}; --Dragunovi's Sash of Domination
-
+  [55282] = {0,"T3.5"}; --Boots of the Grand Crusader (palain)
+  [55283] = {0,"T3.5"}; --Gauntlets of the Grand Crusader (palain)
     
     -----------------
     --- Naxxramas ---
