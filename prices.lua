@@ -13,6 +13,7 @@ local prices = {
   [55083] = {300,"T3.5"}; --Crown of the Wildpack
   [55080] = {350,"T3.5"}; --Bloodmoon, Sickle of the Murderous Flight
   [55084] = {200,"T3.5"}; --Torn Wings of Midnight
+  [55285] = {120,"T3.5"}; --Crite's Holy Hands
 
   --Incantos  
   [55091] = {200,"T3.5"}; --Loop of Infused Renewal
@@ -20,6 +21,9 @@ local prices = {
   [55507] = {250,"T3.5"}; --Choker of Terminal Arcanum
   [55089] = {300,"T3.5"}; --Bands of the Surgebreaker
   [55087] = {400,"T3.5"}; --Jewel of Wild Magics
+  [55085] = {300,"T3.5"}; --Magispark Leggings
+  [55099] = {0,"T3.5"}; --Magehunter Belt
+  [55090] = {100,"T3.5"}; --Scaleshield of Azure Flight
 
   --Tier Tokens  
   [55483] = {150,"T3.5"}; --Ethereal Boots of Conquest

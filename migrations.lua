@@ -19,5 +19,17 @@ function sepgp:v2tov3()
   sepgp_dbver = 3
 end
 
+function sepgp:v2tov10()
+  sepgp_dbver = 10
+end
+
+function sepgp:v3tov10()
+  sepgp_dbver = 10
+end
+
+function sepgp:v4tov10()
+  sepgp_dbver = 10
+end
+
 -- GLOBALS: sepgp_saychannel,sepgp_groupbyclass,sepgp_groupbyarmor,sepgp_groupbyrole,sepgp_raidonly,sepgp_decay,sepgp_minep,sepgp_reservechannel,sepgp_main,sepgp_progress,sepgp_discount,sepgp_log,sepgp_dbver,sepgp_looted
 -- GLOBALS: sepgp,sepgp_prices,sepgp_standings,sepgp_bids,sepgp_loot,sepgp_reserves,sepgp_alts,sepgp_logs
