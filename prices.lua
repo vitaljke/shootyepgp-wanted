@@ -5,45 +5,139 @@ local prices = {
     -----------------
 
   --Gnarlkeeper
-  [55078] = {0,"T3.5"}; --Ley-attuned Chocker
-  [55084] = {200,"T3.5"}; --Torn Wings of Midnight
-  [55081] = {0,"T3.5"}; --Manadrenched Feather Slippers
-  [55079] = {300,"T3.5"}; --Ravenkeeper's Frenzied Embrace
-  [55082] = {100,"T3.5"}; --Idol of Laceration
-  [55083] = {300,"T3.5"}; --Crown of the Wildpack
-  [55080] = {350,"T3.5"}; --Bloodmoon, Sickle of the Murderous Flight
-  [55084] = {200,"T3.5"}; --Torn Wings of Midnight
-  [55285] = {120,"T3.5"}; --Crite's Holy Hands
+[55078] = {0,"T3.5"}; --Ley-attuned Chocker
+[55084] = {200,"T3.5"}; --Torn Wings of Midnight
+[55081] = {0,"T3.5"}; --Manadrenched Feather Slippers
+[55285] = {120,"T3.5"}; --Crite's Holy Hands
+[55079] = {300,"T3.5"}; --Ravenkeeper's Frenzied Embrace
+[55080] = {350,"T3.5"}; --Bloodmoon, Sickle of the Murderous Flight
+[55082] = {100,"T3.5"}; --Idol of Laceration
+[55083] = {300,"T3.5"}; --Crown of the Wildpack
 
-  --Incantos  
-  [55091] = {200,"T3.5"}; --Loop of Infused Renewal
-  [41403] = {0,"T3.5"}; --Enchanted Amethyst
-  [55507] = {250,"T3.5"}; --Choker of Terminal Arcanum
-  [55089] = {300,"T3.5"}; --Bands of the Surgebreaker
-  [55087] = {400,"T3.5"}; --Jewel of Wild Magics
-  [55085] = {300,"T3.5"}; --Magispark Leggings
-  [55099] = {0,"T3.5"}; --Magehunter Belt
-  [55090] = {100,"T3.5"}; --Scaleshield of Azure Flight
+--Ley-Watcher Incantos  
+[55086] = {0,"T3.5"}; --Magehunter Belt
+[55099] = {0,"T3.5"}; --Leystreel Legplates
+[55089] = {300,"T3.5"}; --Bands of the Surgebreaker
+[55507] = {250,"T3.5"}; --Choker of Terminal Arcanum
 
-  --Tier Tokens  
-  [55483] = {150,"T3.5"}; --Ethereal Boots of Conquest
-  [55484] = {150,"T3.5"}; --Ethereal Boots of Ascendancy
-  [55485] = {150,"T3.5"}; --Shifting Mantle of Conquest
-  [55486] = {150,"T3.5"}; --Shifting Mantle of Ascendancy
-  [55487] = {150,"T3.5"}; --Fractured Crown of Conquest
-  [55488] = {150,"T3.5"}; --Fractured Crown of Ascendancy
-  [55489] = {150,"T3.5"}; --Brutal Leggings of Conquest
-  [55490] = {150,"T3.5"}; --Brutal Leggings of Ascendancy
-  [55491] = {150,"T3.5"}; --Nathrezim Armor of Treachery
-  [55492] = {150,"T3.5"}; --Nathrezim Armor of Deceit
+[55085] = {300,"T3.5"}; --Magispark Leggings
+[55087] = {400,"T3.5"}; --Jewel of Wild Magics
+[55090] = {100,"T3.5"}; --Scaleshield of Azure Flight
+[55091] = {200,"T3.5"}; --Loop of Infused Renewal
 
-  --Final Boss
-  [55579] = {0,"T3.5"}; --Hearth of Mephistroth
+[41403] = {0,"T3.5"}; --Enchanted Amethyst
+
+
+--Anomalus
+[55092] = {0,"T3.5"}; --Manahide Slippers
+[55095] = {0,"T3.5"}; --Cloak of the Bloody Ravager
+[55096] = {0,"T3.5"}; --Phase Shifting Crossbow
+[55279] = {0,"T3.5"}; --Branch of Resolute Defence
+
+[55093] = {0,"T3.5"}; --Remains of Overwhelming Power
+[55106] = {0,"T3.5"}; --Bindings of Contained Magic
+[55097] = {0,"T3.5"}; --Choker of Chromatic Power
+[55098] = {0,"T3.5"}; --Gloves of Nourishment
+
+
+--Echo of Medivh
+[55108] = {0,"T3.5"}; --Dreadslayer Shoulderblades
+[55109] = {0,"T3.5"}; --Legwraps of Meticulous Planning
+[55276] = {0,"T3.5"}; --Forgotten Raven's Mallet
+[55110] = {0,"T3.5"}; --Libram of the Eternal Tower
+
+[55107] = {0,"T3.5"}; --Gloves of Leyline Convergence
+[55111] = {0,"T3.5"}; --Eye of Dormant Corruption
+[55112] = {0,"T3.5"}; --Pendant of Forgiven Mistakes
+[55094] = {0,"T3.5"}; --Medivh's Hindsight
+
+--King (Chess Event)
+[55088] = {0,"T3.5"}; --Dragonclaw Gauntlets
+[55100] = {0,"T3.5"}; --Checkmate
+[55101] = {0,"T3.5"}; --King's Edict
+[55103] = {0,"T3.5"}; --Royal Seal of Greymane
+
+[55102] = {0,"T3.5"}; --Insomnius' Retribution
+[55104] = {0,"T3.5"}; --Pawn's Advance
+[55105] = {0,"T3.5"}; --Bishop's Reverence
+[55274] = {0,"T3.5"}; --Chain-Cloak of the Rookguard
+
+--Sanv Tas'dal
+[55113] = {0,"T3.5"}; --Dreadslayer Horns
+[55114] = {0,"T3.5"}; --Totem of Broken Earth
+[55115] = {0,"T3.5"}; --Riftcarver's Implement
+[55116] = {0,"T3.5"}; --Raka'shishi, Spear of the Adrift Hunt
+[55117] = {0,"T3.5"}; --Girdle of the Faded Primals
+[55118] = {0,"T3.5"}; --Kum'ischa's Tattered Drape
+[55119] = {0,"T3.5"}; --Forgotten Hide Helm
+
+
+--Kruul
+[55127] = {0,"T3.5"}; --Shar'tateth, the Shattered Edge
+[55129] = {0,"T3.5"}; --Desecration
+[55128] = {0,"T3.5"}; --Comet Signaller
+[55130] = {0,"T3.5"}; --Wristwraps of Exiled Radiance
+[55131] = {0,"T3.5"}; --Shieldrender Talisman
+[55132] = {0,"T3.5"}; --Pendant of Purified Demon’s Blood
+[55506] = {0,"T3.5"}; --Worldbreaker Girdle
+[55510] = {0,"T3.5"}; --Fragments of Aldrach
+[55511] = {0,"T3.5"}; --Hellflame
+
+
+--Rupturan the Broken
+[55120] = {0,"T3.5"}; --Al'Kazeth, Claw of Ruptured Elements
+[55121] = {0,"T3.5"}; --Bulwark of Enduring Earth
+[55122] = {0,"T3.5"}; --Earthquake Leggings
+[55123] = {0,"T3.5"}; --Loop of Hardened Slate
+[55124] = {0,"T3.5"}; --Pure Jewel of Draenor
+[55125] = {0,"T3.5"}; --Handwraps of Dead Winds
+[55126] = {0,"T3.5"}; --Mandtle of the Drifting Stars
+
+--Mephistroth
+[55351] = {0,"T3.5"}; --Turalyon’s Hope
+[55353] = {0,"T3.5"}; --Mephistroth’s Cunning
+[55356] = {0,"T3.5"}; --Netherwrought Bracers
+[5513] = {0,"T3.5"}; --Tunic of Demonic Deception
+[55357] = {0,"T3.5"}; --Sash of the Grand Betrayal
+[55346] = {0,"T3.5"}; --Rain of Spiders
+[55347] = {0,"T3.5"}; --Thunderfall, Stormhammer of the Chief Thane
+
+[55348] = {0,"T3.5"}; --Kirel’narak, the Death Sentence
+[55512] = {0,"T3.5"}; --Forgotten Hide Pauldrons
+[55349] = {0,"T3.5"}; --Nethraka, Wing of Oblivion
+[55350] = {0,"T3.5"}; --Censer of Soulwarding
+[55352] = {0,"T3.5"}; --Cloak of Rapid Regeneration
+[55354] = {0,"T3.5"}; --Khadgar’s Guidance
+[55355] = {0,"T3.5"}; --Memory of the Last Guardian
+
+[55579] = {0,"T3.5"}; --Hearth of Mephistroth
+
+
+--Tier 3.5 Tokens  
+[55483] = {150,"T3.5"}; --Ethereal Boots of Conquest
+[55484] = {150,"T3.5"}; --Ethereal Boots of Ascendancy
+[55485] = {150,"T3.5"}; --Shifting Mantle of Conquest
+[55486] = {150,"T3.5"}; --Shifting Mantle of Ascendancy
+[55487] = {150,"T3.5"}; --Fractured Crown of Conquest
+[55488] = {150,"T3.5"}; --Fractured Crown of Ascendancy
+[55489] = {150,"T3.5"}; --Brutal Leggings of Conquest
+[55490] = {150,"T3.5"}; --Brutal Leggings of Ascendancy
+[55491] = {150,"T3.5"}; --Nathrezim Armor of Treachery
+[55492] = {150,"T3.5"}; --Nathrezim Armor of Deceit
+[55482] = {150,"T3.5"}; --Ephemeral Pendant
  
-  -- Trash
-  [55284] = {300,"T3.5"}; --Dragunovi's Sash of Domination
-  [55282] = {0,"T3.5"}; --Boots of the Grand Crusader (palain)
-  [55283] = {0,"T3.5"}; --Gauntlets of the Grand Crusader (palain)
+-- Trash
+[55275] = {0,"T3.5"}; --Silvers of Nullification
+[55277] = {0,"T3.5"}; --The End of All Ambitions
+[55278] = {0,"T3.5"}; --Ques’ Gauntlets of Precision
+[55280] = {0,"T3.5"}; --Boots of Elemental Fury
+[55281] = {0,"T3.5"}; --Gauntlets of Elemental Fury
+[55282] = {0,"T3.5"}; --Boots of the Grand Crusader
+[55283] = {0,"T3.5"}; --Gauntlets of the Grand Crusader
+[55284] = {300,"T3.5"}; --Dragunovi's Sash of Domination
+[55286] = {0,"T3.5"}; --Ring of Holy Light
+[55508] = {0,"T3.5"}; --Brand of Karazhan
+
     
     -----------------
     --- Naxxramas ---
