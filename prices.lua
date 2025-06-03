@@ -1,75 +1,75 @@
 local prices = {
 
-    -----------------
-    --- Kara40    ---
-    -----------------
+-----------------
+--- Kara40    ---
+-----------------
 
-  --Gnarlkeeper
+--Gnarlkeeper
 [55078] = {0,"T3.5"}; --Ley-attuned Chocker
-[55084] = {200,"T3.5"}; --Torn Wings of Midnight
+[55084] = {150,"T3.5"}; --Torn Wings of Midnight
 [55081] = {0,"T3.5"}; --Manadrenched Feather Slippers
 [55285] = {120,"T3.5"}; --Crite's Holy Hands
-[55079] = {300,"T3.5"}; --Ravenkeeper's Frenzied Embrace
+[55079] = {200,"T3.5"}; --Ravenkeeper's Frenzied Embrace
 [55080] = {350,"T3.5"}; --Bloodmoon, Sickle of the Murderous Flight
 [55082] = {100,"T3.5"}; --Idol of Laceration
-[55083] = {300,"T3.5"}; --Crown of the Wildpack
+[55083] = {350,"T3.5"}; --Crown of the Wildpack
 
 --Ley-Watcher Incantos  
 [55086] = {0,"T3.5"}; --Magehunter Belt
-[55099] = {0,"T3.5"}; --Leystreel Legplates
-[55089] = {300,"T3.5"}; --Bands of the Surgebreaker
+[55099] = {100,"T3.5"}; --Leystreel Legplates
+[55089] = {250,"T3.5"}; --Bands of the Surgebreaker
 [55507] = {250,"T3.5"}; --Choker of Terminal Arcanum
 
 [55085] = {300,"T3.5"}; --Magispark Leggings
 [55087] = {400,"T3.5"}; --Jewel of Wild Magics
 [55090] = {100,"T3.5"}; --Scaleshield of Azure Flight
-[55091] = {200,"T3.5"}; --Loop of Infused Renewal
+[55091] = {250,"T3.5"}; --Loop of Infused Renewal
 
 [41403] = {0,"T3.5"}; --Enchanted Amethyst
 
 
 --Anomalus
 [55092] = {0,"T3.5"}; --Manahide Slippers
-[55095] = {0,"T3.5"}; --Cloak of the Bloody Ravager
-[55096] = {0,"T3.5"}; --Phase Shifting Crossbow
-[55279] = {0,"T3.5"}; --Branch of Resolute Defence
+[55095] = {200,"T3.5"}; --Cloak of the Bloody Ravager
+[55096] = {250,"T3.5"}; --Phase Shifting Crossbow
+[55279] = {200,"T3.5"}; --Branch of Resolute Defence
 
-[55093] = {0,"T3.5"}; --Remains of Overwhelming Power
-[55106] = {0,"T3.5"}; --Bindings of Contained Magic
+[55093] = {400,"T3.5"}; --Remains of Overwhelming Power
+[55106] = {200,"T3.5"}; --Bindings of Contained Magic
 [55097] = {0,"T3.5"}; --Choker of Chromatic Power
-[55098] = {0,"T3.5"}; --Gloves of Nourishment
+[55098] = {150,"T3.5"}; --Gloves of Nourishment
 
 
 --Echo of Medivh
-[55108] = {0,"T3.5"}; --Dreadslayer Shoulderblades
-[55109] = {0,"T3.5"}; --Legwraps of Meticulous Planning
-[55276] = {0,"T3.5"}; --Forgotten Raven's Mallet
+[55108] = {350,"T3.5"}; --Dreadslayer Shoulderblades
+[55109] = {50,"T3.5"}; --Legwraps of Meticulous Planning
+[55276] = {300,"T3.5"}; --Forgotten Raven's Mallet
 [55110] = {0,"T3.5"}; --Libram of the Eternal Tower
 
-[55107] = {0,"T3.5"}; --Gloves of Leyline Convergence
-[55111] = {0,"T3.5"}; --Eye of Dormant Corruption
-[55112] = {0,"T3.5"}; --Pendant of Forgiven Mistakes
-[55094] = {0,"T3.5"}; --Medivh's Hindsight
+[55107] = {300,"T3.5"}; --Gloves of Leyline Convergence
+[55111] = {400,"T3.5"}; --Eye of Dormant Corruption
+[55112] = {150,"T3.5"}; --Pendant of Forgiven Mistakes
+[55094] = {300,"T3.5"}; --Medivh's Hindsight
 
 --King (Chess Event)
-[55088] = {0,"T3.5"}; --Dragonclaw Gauntlets
-[55100] = {0,"T3.5"}; --Checkmate
-[55101] = {0,"T3.5"}; --King's Edict
-[55103] = {0,"T3.5"}; --Royal Seal of Greymane
+[55088] = {20,"T3.5"}; --Dragonclaw Gauntlets
+[55100] = {350,"T3.5"}; --Checkmate
+[55101] = {400,"T3.5"}; --King's Edict
+[55103] = {250,"T3.5"}; --Royal Seal of Greymane
 
-[55102] = {0,"T3.5"}; --Insomnius' Retribution
-[55104] = {0,"T3.5"}; --Pawn's Advance
-[55105] = {0,"T3.5"}; --Bishop's Reverence
-[55274] = {0,"T3.5"}; --Chain-Cloak of the Rookguard
+[55102] = {350,"T3.5"}; --Insomnius' Retribution
+[55104] = {200,"T3.5"}; --Pawn's Advance
+[55105] = {300,"T3.5"}; --Bishop's Reverence
+[55274] = {150,"T3.5"}; --Chain-Cloak of the Rookguard
 
 --Sanv Tas'dal
-[55113] = {0,"T3.5"}; --Dreadslayer Horns
-[55114] = {0,"T3.5"}; --Totem of Broken Earth
-[55115] = {0,"T3.5"}; --Riftcarver's Implement
-[55116] = {0,"T3.5"}; --Raka'shishi, Spear of the Adrift Hunt
-[55117] = {0,"T3.5"}; --Girdle of the Faded Primals
-[55118] = {0,"T3.5"}; --Kum'ischa's Tattered Drape
-[55119] = {0,"T3.5"}; --Forgotten Hide Helm
+[55113] = {250,"T3.5"}; --Dreadslayer Horns
+[55114] = {100,"T3.5"}; --Totem of Broken Earth
+[55115] = {500,"T3.5"}; --Riftcarver's Implement
+[55116] = {600,"T3.5"}; --Raka'shishi, Spear of the Adrift Hunt
+[55117] = {300,"T3.5"}; --Girdle of the Faded Primals
+[55118] = {200,"T3.5"}; --Kum'ischa's Tattered Drape
+[55119] = {350,"T3.5"}; --Forgotten Hide Helm
 
 
 --Kruul
@@ -114,17 +114,17 @@ local prices = {
 
 
 --Tier 3.5 Tokens  
-[55483] = {150,"T3.5"}; --Ethereal Boots of Conquest
-[55484] = {150,"T3.5"}; --Ethereal Boots of Ascendancy
-[55485] = {150,"T3.5"}; --Shifting Mantle of Conquest
-[55486] = {150,"T3.5"}; --Shifting Mantle of Ascendancy
-[55487] = {150,"T3.5"}; --Fractured Crown of Conquest
-[55488] = {150,"T3.5"}; --Fractured Crown of Ascendancy
-[55489] = {150,"T3.5"}; --Brutal Leggings of Conquest
-[55490] = {150,"T3.5"}; --Brutal Leggings of Ascendancy
-[55491] = {150,"T3.5"}; --Nathrezim Armor of Treachery
-[55492] = {150,"T3.5"}; --Nathrezim Armor of Deceit
-[55482] = {150,"T3.5"}; --Ephemeral Pendant
+[55483] = {250,"T3.5"}; --Ethereal Boots of Conquest
+[55484] = {250,"T3.5"}; --Ethereal Boots of Ascendancy
+[55485] = {250,"T3.5"}; --Shifting Mantle of Conquest
+[55486] = {250,"T3.5"}; --Shifting Mantle of Ascendancy
+[55487] = {250,"T3.5"}; --Fractured Crown of Conquest
+[55488] = {250,"T3.5"}; --Fractured Crown of Ascendancy
+[55489] = {250,"T3.5"}; --Brutal Leggings of Conquest
+[55490] = {250,"T3.5"}; --Brutal Leggings of Ascendancy
+[55491] = {250,"T3.5"}; --Nathrezim Armor of Treachery
+[55492] = {250,"T3.5"}; --Nathrezim Armor of Deceit
+[55482] = {350,"T3.5"}; --Ephemeral Pendant
  
 -- Trash
 [55275] = {0,"T3.5"}; --Silvers of Nullification
@@ -137,6 +137,7 @@ local prices = {
 [55284] = {300,"T3.5"}; --Dragunovi's Sash of Domination
 [55286] = {0,"T3.5"}; --Ring of Holy Light
 [55508] = {0,"T3.5"}; --Brand of Karazhan
+
 
     
     -----------------
