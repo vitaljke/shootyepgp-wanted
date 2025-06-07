@@ -2450,31 +2450,32 @@ function sepgp:EasyMenu(menuList, menuFrame, anchor, x, y, displayMode, level)
   ToggleDropDownMenu(1, nil, menuFrame, anchor, x, y)
 end
 
-function sepgp:isPug(name)More actions
+function sepgp:isPug(name)
   for i = 1, GetNumGuildMembers(1) do
     local guildMemberName, _, _, _, _, _, _, officerNote = GetGuildRosterInfo(i)
-    local pugName = string.match(officerNote, "{pug:([^}]+)}")
-      if pugName == name then
-        return true, guildMemberName
-      end
+    if officerNote and officerNote ~= '' then
+      local _,_,pugName = string.find(officerNote, "{pug:([^}]+)}")
+        if pugName == name then
+          return true, guildMemberName
+        end
+    end
   end
   return false
 end
 function sepgp:sendPugEpUpdate(pugName, ep)
-  SendChatMessage(string.format("Pug %s has %d EP", pugName, ep), "CHANNEL", nil, GetChannelName("WantedPugs"))
+  SendChatMessage(string.format("Pug %s has %d EP", pugName, ep), "CHANNEL", nil, GetChannelName("RetPugs"))
 end
 function sepgp:parsePugEpUpdate(message, channelName)
-  local pugName, ep = string.match(message, "Pug (%S+) has (%d+) EP")
+  local _, _, pugName, ep = string.find(message, "Pug (%S+) has (%d+) EP")
   local playerName = UnitName("player")
   if pugName == playerName then
     if pugName and ep then
-      local guildName = string.match(channelName, "^(.+)Pugs$")
+      local _, _, guildName = string.find(channelName, "^(.+)Pugs$")
       if guildName then
         if not sepgp_pugEP[guildName] then
           sepgp_pugEP[guildName] = {}
         end
         sepgp_pugEP[guildName][pugName] = tonumber(ep)
-        sepgp_pugEP = sepgp_pugEP
     
         self:defaultPrint(string.format("Updated EP for %s in guild %s: %d", pugName, guildName, tonumber(ep)))
         end
@@ -2502,9 +2503,11 @@ function sepgp:getAllPugs()
   local pugs = {}
   for i = 1, GetNumGuildMembers(1) do
     local guildMemberName, _, _, guildMemberLevel, _, _, _, officerNote = GetGuildRosterInfo(i)
-    local pugName = string.match(officerNote, "{pug:([^}]+)}")
-    if pugName then
-      pugs[guildMemberName] = pugName
+    if officerNote and officerNote ~= '' then
+      local _, _, pugName = string.find(officerNote, "{pug:([^}]+)}")
+      if pugName then
+        pugs[guildMemberName] = pugName
+      end
     end
   end
   return pugs
@@ -2525,7 +2528,16 @@ function sepgp:updateAllPugEP()
 
   self:defaultPrint(string.format("Updated EP for %d Pug player(s)", count))
 end
-
+function sepgp:getPugName(name)
+  for i = 1, GetNumGuildMembers(1) do
+      local guildMemberName, _, _, _, _, _, _, officerNote = GetGuildRosterInfo(i)
+      if guildMemberName == name then
+          local _, _, pugName = string.find(officerNote or "", "{pug:([^}]+)}")
+          return pugName
+      end
+  end
+  return nil
+end
 
 -- GLOBALS: sepgp_saychannel,sepgp_groupbyclass,sepgp_groupbyarmor,sepgp_groupbyrole,sepgp_raidonly,sepgp_decay,sepgp_minep,sepgp_reservechannel,sepgp_main,sepgp_progress,sepgp_discount,sepgp_altspool,sepgp_altpercent,sepgp_log,sepgp_dbver,sepgp_looted,sepgp_debug,sepgp_fubar
 -- GLOBALS: sepgp,sepgp_prices,sepgp_standings,sepgp_bids,sepgp_loot,sepgp_reserves,sepgp_alts,sepgp_logs,sepgp_pugEP
