@@ -480,7 +480,7 @@ function sepgp:OnEnable() -- PLAYER_LOGIN (2)
   end
 
   self:RegisterEvent("CHAT_MSG_CHANNEL", function(message, _, _, _, _, _, _, _, channelName)
-    if string.find(channelName, "RetPugs") then
+    if string.find(channelName, "Wantedpugs") then
       sepgp:parsePugEpUpdate(message, channelName)
     end
   end)  
@@ -2463,7 +2463,7 @@ function sepgp:isPug(name)
   return false
 end
 function sepgp:sendPugEpUpdate(pugName, ep)
-  SendChatMessage(string.format("Pug %s has %d EP", pugName, ep), "CHANNEL", nil, GetChannelName("RetPugs"))
+  SendChatMessage(string.format("Pug %s has %d EP", pugName, ep), "CHANNEL", nil, GetChannelName("Wantedpugs"))
 end
 function sepgp:parsePugEpUpdate(message, channelName)
   local _, _, pugName, ep = string.find(message, "Pug (%S+) has (%d+) EP")
