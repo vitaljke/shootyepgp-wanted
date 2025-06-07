@@ -684,6 +684,8 @@ function sepgp:delayedInit()
   -- init options and comms
   self._options = self:buildMenu()
   self:RegisterChatCommand({"/shooty","/sepgp","/shootyepgp"},self.cmdtable())
+  self:RegisterChatCommand({"/wantedep"}, function() sepgp:CheckPugEP() end)
+  self:RegisterChatCommand({"/shooty","/sepgp","/shootyepgp","/wanted"},self.cmdtable())
   self:RegisterChatCommand({"/updatepugep"}, function() sepgp:updateAllPugEP() end)
   self:RegisterEvent("CHAT_MSG_ADDON","addonComms")  
   -- broadcast our version
