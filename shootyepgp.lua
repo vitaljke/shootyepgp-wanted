@@ -257,7 +257,7 @@ function sepgp:buildMenu()
       hidden = function() return not (admin()) end,
       func = function() sepgp:afkcheck_reserves() end
     }
-   options.args["updatePugs"] = {More actions
+   options.args["updatePugs"] = {
       type = "execute",
       name = "Update Pug EP",
       desc = "Update Pug EP",
@@ -479,7 +479,7 @@ function sepgp:OnEnable() -- PLAYER_LOGIN (2)
     end
   end
 
-  self:RegisterEvent("CHAT_MSG_CHANNEL", function(message, _, _, _, _, _, _, _, channelName)More actions
+  self:RegisterEvent("CHAT_MSG_CHANNEL", function(message, _, _, _, _, _, _, _, channelName)
     if string.find(channelName, "RetPugs") then
       sepgp:parsePugEpUpdate(message, channelName)
     end
@@ -1310,7 +1310,7 @@ function sepgp:givename_ep(getname,ep) -- awards ep to a single character
   if not (admin()) then return end
   local isPug, playerNameInGuild = self:isPug(getname)
   local postfix, alt = ""
-  if isPug thenMore actions
+  if isPug then
     -- Update EP for the level 1 character in the guild
     alt = getname
     getname = playerNameInGuild
