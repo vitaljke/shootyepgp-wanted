@@ -919,7 +919,7 @@ local prices = {
   [20638] = {32,"T1.5"}; --Leggings of the Demented Mind
   [20639] = {12,"T1.5"}; --Strangely Glyphed Legplates
   [20644] = {4,"T1.5"}; --Nightmare Engulfed Object
-    [6680] = {12,"T1"}
+  [2672] = {12,"T1"}
 }
 sepgp.gp_prices = prices
 --[[local price_scaling = {
