@@ -369,61 +369,80 @@ end
 -- name, class, armor_class, roles, EP, GP, PR
 -- and sorted by PR
 function sepgp_standings:BuildStandingsTable()
-  local t = { }
-  local r = { }
+  local t = {}
+  local r = {}
+
   if (sepgp_raidonly) and GetNumRaidMembers() > 0 then
     for i = 1, GetNumRaidMembers(true) do
-      local name, rank, subgroup, level, class, fileName, zone, online, isDead = GetRaidRosterInfo(i) 
+      local name = GetRaidRosterInfo(i)
       r[name] = true
     end
   end
+
   sepgp.alts = {}
+
   for i = 1, GetNumGuildMembers(1) do
     local name, _, _, _, class, _, note, officernote, _, _ = GetGuildRosterInfo(i)
-    local ep = (sepgp:get_ep_v3(name,officernote) or 0) 
-    local gp = (sepgp:get_gp_v3(name,officernote) or sepgp.VARS.basegp)
-    local main, main_class, main_rank = sepgp:parseAlt(name,officernote)
-    if (main) then
-      if ((self._playerName) and (name == self._playerName)) then
-        if (not sepgp_main) or (sepgp_main and sepgp_main ~= main) then
+    officernote = officernote or ""
+
+    local ep = (sepgp:get_ep_v3(name, officernote) or 0)
+    local gp = (sepgp:get_gp_v3(name, officernote) or sepgp.VARS.basegp)
+
+    local main, main_class, main_rank = sepgp:parseAlt(name, officernote)
+
+    if main then
+      if self._playerName and name == self._playerName then
+        if not sepgp_main or sepgp_main ~= main then
           sepgp_main = main
-          self:defaultPrint(L["Your main has been set to %s"],sepgp_main)
+          self:defaultPrint(L["Your main has been set to %s"], sepgp_main)
         end
       end
       main = C:Colorize(BC:GetHexColor(main_class), main)
       sepgp.alts[main] = sepgp.alts[main] or {}
       sepgp.alts[main][name] = class
     end
+
     local armor_class = self:getArmorClass(class)
+
     if ep > 0 then
-      if (sepgp_raidonly) and next(r) then
+local display_name = name
+if type(officernote) == "string" then
+  local _, _, pug_nickname = string.find(officernote, "{pug:([%w_%-]+)}")
+  if pug_nickname then
+    display_name = pug_nickname
+  end
+end
+
+      if sepgp_raidonly and next(r) then
         if r[name] then
-          table.insert(t,{name,class,armor_class,ep,gp,ep/gp})
+          table.insert(t, {display_name, class, armor_class, ep, gp, ep / gp})
         end
       else
-      	table.insert(t,{name,class,armor_class,ep,gp,ep/gp})
+        table.insert(t, {display_name, class, armor_class, ep, gp, ep / gp})
       end
     end
   end
-  if (sepgp_groupbyclass) then
-    table.sort(t, function(a,b)
-      if (a[2] ~= b[2]) then return a[2] > b[2]
-      else return pr_sorter_standings(a,b) end
+
+  if sepgp_groupbyclass then
+    table.sort(t, function(a, b)
+      if a[2] ~= b[2] then return a[2] > b[2]
+      else return pr_sorter_standings(a, b) end
     end)
-  elseif (sepgp_groupbyarmor) then
-    table.sort(t, function(a,b)
-      if (a[3] ~= b[3]) then return a[3] > b[3]
-      else return pr_sorter_standings(a,b) end
+  elseif sepgp_groupbyarmor then
+    table.sort(t, function(a, b)
+      if a[3] ~= b[3] then return a[3] > b[3]
+      else return pr_sorter_standings(a, b) end
     end)
-  elseif (sepgp_groupbyrole) then
-    t = self:getRolesClass(t) -- we are subbing role into armor_class to avoid extra table creation
-    table.sort(t, function(a,b)
-    if (a[3] ~= b[3]) then return a[3] > b[3]
-      else return pr_sorter_standings(a,b) end
-    end)   
+  elseif sepgp_groupbyrole then
+    t = self:getRolesClass(t)
+    table.sort(t, function(a, b)
+      if a[3] ~= b[3] then return a[3] > b[3]
+      else return pr_sorter_standings(a, b) end
+    end)
   else
     table.sort(t, pr_sorter_standings)
   end
+
   return t
 end
 
