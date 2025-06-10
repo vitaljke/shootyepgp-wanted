@@ -218,7 +218,7 @@ function sepgp_standings:OnEnable()
   if not T:IsRegistered("sepgp_standings") then
     T:Register("sepgp_standings",
       "children", function()
-        T:SetTitle(L["shootyepgp standings"])
+        T:SetTitle(L["Guild Wanted"])
         self:OnTooltipUpdate()
       end,
   		"showTitleWhenDetached", true,
@@ -413,13 +413,22 @@ if type(officernote) == "string" then
   end
 end
 
-      if sepgp_raidonly and next(r) then
-        if r[name] then
-          table.insert(t, {display_name, class, armor_class, ep, gp, ep / gp})
-        end
-      else
+      local isInRaid = r[name]
+
+if not isInRaid and type(officernote) == "string" then
+  local _, _, pug_nick = string.find(officernote, "{pug:([%w_%-]+)}")
+  if pug_nick then
+    isInRaid = r[pug_nick]
+  end
+end
+
+   if sepgp_raidonly and next(r) then
+    if isInRaid then
         table.insert(t, {display_name, class, armor_class, ep, gp, ep / gp})
-      end
+       end
+     else
+      table.insert(t, {display_name, class, armor_class, ep, gp, ep / gp})
+     end
     end
   end
 
@@ -518,3 +527,4 @@ end
 
 -- GLOBALS: sepgp_saychannel,sepgp_groupbyclass,sepgp_groupbyarmor,sepgp_groupbyrole,sepgp_raidonly,sepgp_decay,sepgp_minep,sepgp_reservechannel,sepgp_main,sepgp_progress,sepgp_discount,sepgp_log,sepgp_dbver,sepgp_looted
 -- GLOBALS: sepgp,sepgp_prices,sepgp_standings,sepgp_bids,sepgp_loot,sepgp_reserves,sepgp_alts,sepgp_logs
+
