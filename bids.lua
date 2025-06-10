@@ -242,7 +242,7 @@ function sepgp_bids:OnTooltipUpdate()
     local name, class, ep, gp, pr, main = unpack(to[i])
     local namedesc
     if (main) then
-      namedesc = string.format("%s%(%s%)", C:Colorize(BC:GetHexColor(class), name), L["Alt"])
+      namedesc = string.format("%s (%s)", C:Colorize(BC:GetHexColor(class), name), L["Alt"])
     else
       namedesc = C:Colorize(BC:GetHexColor(class), name)
     end
