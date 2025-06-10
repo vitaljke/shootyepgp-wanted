@@ -48,7 +48,7 @@ L:RegisterTranslations("enUS", function() return {
   ["Imported %d members."] = true,
   ["Imported %d members.\n"] = true,
   ["%s\nFailed to import:"] = true,
-  ["shootyepgp standings"] = true,
+  ["Guild Wanted"] = true,
   ["Group by class"] = true,
   ["Group members by class."] = true,
   ["Export"] = true,
