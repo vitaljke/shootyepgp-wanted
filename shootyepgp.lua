@@ -1436,7 +1436,8 @@ function sepgp:givename_gp(getname, gp, isItem)
       [0] = 1.0,  
       [1] = 1.0, 
       [2] = 1.0, 
-      [3] = 1.0, 
+      [3] = 1.0,
+      [4] = 1.0,
       [5] = 1.0,    }
 
     if rankIndex ~= nil then
@@ -2878,9 +2879,10 @@ function sepgp:decay_gp_by_rank()
   local validRanks = {
     [0] = true,   
     [1] = true,   
-    [2] = False,   
-    [3] = False,   
-    [5] = False,  
+    [2] = true,   
+    [3] = true,
+    [4] = true,
+    [5] = true,  
   }
 
   for i = 1, GetNumGuildMembers(1) do
