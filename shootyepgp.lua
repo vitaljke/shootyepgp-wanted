@@ -995,6 +995,8 @@ function sepgp:bidPrint(link,masterlooter,need,greed,bid)
   local mslink = string.gsub(bidlink["ms"],"$ML",masterlooter)
   local oslink = string.gsub(bidlink["os"],"$ML",masterlooter)
   local msg = string.format(L["Click $MS or $OS for %s"],link)
+  local randomSound = math.random(1, 6)
+    PlaySoundFile("Interface\AddOns\shootyepgp\Sounds\loot-" .. randomSound .. ".wav")
   if (need and greed) then
     msg = string.gsub(msg,"$MS",mslink)
     msg = string.gsub(msg,"$OS",oslink)
@@ -1022,9 +1024,7 @@ function sepgp:bidPrint(link,masterlooter,need,greed,bid)
   if (chatframe) then
     chatframe:AddMessage(" ")
     chatframe:AddMessage(string.format(out,msg),NORMAL_FONT_COLOR.r,NORMAL_FONT_COLOR.g,NORMAL_FONT_COLOR.b)
-    local randomSound = math.random(1, 6)
-    PlaySoundFile("Interface\\AddOns\\shootyepgp\\Sounds\\loot-" .. randomSound .. ".wav")
-
+    
   end
 end
 
