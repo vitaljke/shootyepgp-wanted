@@ -1,5 +1,5 @@
 local L = AceLibrary("AceLocale-2.2"):new("shootyepgp")
-function sepgp:v2tov3()
+function sepgp:v2tov4()
   local count = 0
   for i = 1, GetNumGuildMembers(1) do
     local name, _, _, _, class, _, note, officernote, _, _ = GetGuildRosterInfo(i)
