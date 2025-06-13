@@ -376,7 +376,36 @@ options.args["broadcast_pr"] = {
       order = 100,
       hidden = function() return not (admin()) end,
       func = function() sepgp:decay_epgp_v3() end 
-    }    
+    }
+    options.args["set_rank_decay"] = {
+  type = "range",
+  name = "Set GP Rank Decay %",
+  desc = "Set decay % for GP by rank (Admin only)",
+  order = 101,
+  get = function() return 1 - sepgp_rank_decay end,
+  set = function(v)
+    sepgp_rank_decay = 1 - v
+  end,
+  min = 0.01,
+  max = 0.5,
+  step = 0.01,
+  isPercent = true,
+  hidden = function() return not admin() end,
+}
+
+options.args["decay_gp_by_rank"] = {
+  type = "execute",
+  name = "Decay GP by Rank",
+  desc = function()
+    return string.format("Decays only GP by %d%% for selected guild ranks.", (1 - sepgp_rank_decay) * 100)
+  end,
+  order = 102,
+  func = function()
+    sepgp:decay_gp_by_rank()
+  end,
+  hidden = function() return not admin() end,
+}
+    
     options.args["set_decay"] = {
       type = "range",
       name = L["Set Decay %"],
@@ -480,6 +509,7 @@ function sepgp:OnInitialize() -- ADDON_LOADED (1) unless LoD
   if sepgp_looted == nil then sepgp_looted = {} end
   if sepgp_debug == nil then sepgp_debug = {} end
   if sepgp_pugEP == nil then sepgp_pugEP = {} end
+  if sepgp_rank_decay == nil then sepgp_rank_decay = 0.9 end
   self:RegisterDB("sepgp_fubar")
   self:RegisterDefaults("char",{})
   --table.insert(sepgp_debug,{[date("%b/%d %H:%M:%S")]="OnInitialize"})
@@ -1330,38 +1360,50 @@ function sepgp:award_reserve_ep(ep) -- awards ep to reserve list
   end
 end
 
-function sepgp:givename_ep(getname,ep) -- awards ep to a single character
+function sepgp:givename_ep(getname, ep)
   if not (admin()) then return end
+
   local isPug, playerNameInGuild = self:isPug(getname)
   local postfix, alt = ""
+
   if isPug then
-    -- Update EP for the level 1 character in the guild
     alt = getname
     getname = playerNameInGuild
-    ep = self:num_round(sepgp_altpercent*ep)
-    postfix = string.format(", %s\'s Pug EP Bank.",alt)
-  elseif (sepgp_altspool) then
+    ep = self:num_round(sepgp_altpercent * ep)
+    postfix = string.format(", %s's Pug EP Bank.", alt)
+  elseif sepgp_altspool then
     local main = self:parseAlt(getname)
-    if (main) then
+    if main then
       alt = getname
       getname = main
-      ep = self:num_round(sepgp_altpercent*ep)
-      postfix = string.format(L[", %s\'s Main."],alt)
+      ep = self:num_round(sepgp_altpercent * ep)
+      postfix = string.format(L[", %s's Main."], alt)
     end
   end
-  local newep = ep + (self:get_ep_v3(getname) or 0) 
-  self:update_ep_v3(getname,newep) 
-  self:debugPrint(string.format(L["Giving %d ep to %s%s."],ep,getname,postfix))
-  if ep < 0 then -- inform admins and victim of penalties
-    local msg = string.format(L["%s EP Penalty to %s%s."],ep,getname,postfix)
+
+  local newep = ep + (self:get_ep_v3(getname) or 0)
+  self:update_ep_v3(getname, newep)
+
+  if ep < 0 then
+    local msg = string.format(L["%s EP Penalty to %s%s."], ep, getname, postfix)
+    self:debugPrint(msg)
     self:adminSay(msg)
     self:addToLog(msg)
-    local addonMsg = string.format("%s;%s;%s",getname,"EP",ep)
-    self:addonMessage(addonMsg,"GUILD")
-  end  
+  else
+    local msg = string.format(L["Giving %d ep to %s%s."], ep, getname, postfix)
+    self:debugPrint(msg)
+    self:adminSay(msg)
+    self:addToLog(msg)
+  end
+
+  -- Обновление PR и отображение
+  local addonMsg = string.format("%s;%s;%s", getname, "EP", ep)
+  self:addonMessage(addonMsg, "GUILD")
 end
 
-function sepgp:givename_gp(getname, gp)
+
+
+function sepgp:givename_gp(getname, gp, isItem)
   if not (admin()) then return end
   local postfix, alt = ""
  
@@ -1379,6 +1421,33 @@ function sepgp:givename_gp(getname, gp)
     end
   end
 
+    if isItem then
+    GuildRoster()
+    local rankIndex
+    for i = 1, GetNumGuildMembers() do
+      local name, _, rIndex = GetGuildRosterInfo(i)
+      if name == getname then
+        rankIndex = rIndex
+        break
+      end
+    end
+
+    local gp_multipliers = {
+      [0] = 1.0,  
+      [1] = 1.0, 
+      [2] = 1.0, 
+      [3] = 1.0, 
+      [5] = 1.0,    }
+
+    if rankIndex ~= nil then
+      local multiplier = gp_multipliers[rankIndex] or 1.0
+      sepgp:debugPrint("Ранг игрока: " .. rankIndex .. ", множитель GP: " .. multiplier)
+      gp = math.floor(gp * multiplier)
+    else
+      sepgp:debugPrint("Ранг не найден для " .. tostring(getname))
+    end
+  end
+
   local oldgp = self:get_gp_v3(getname) or sepgp.VARS.basegp
   local newgp = gp + oldgp
 
@@ -1392,6 +1461,7 @@ function sepgp:givename_gp(getname, gp)
   local addonMsg = string.format("%s;%s;%s", getname, "GP", gp)
   self:addonMessage(addonMsg, "GUILD")
 end
+
 
 function sepgp:decay_epgp_v2() -- decays entire roster's ep and gp
   if not (admin()) then return end
@@ -2483,10 +2553,10 @@ local sepgp_auto_gp_menu = {
         local target = (player == YOU and sepgp._playerName or player)
 
         if sepgp:isPug(target) then
-          sepgp:givename_gp(target, price)
+          sepgp:givename_gp(target, price, true)
           sepgp:defaultPrint(string.format("PUG %s получил %s за %d GP (MS)", target, item, price))
         else
-          sepgp:givename_gp(target, price)
+          sepgp:givename_gp(target, price, true)
           sepgp:defaultPrint(string.format("%s получил %s за %d GP (MS)", target, item, price))
         end
 
@@ -2511,10 +2581,10 @@ local sepgp_auto_gp_menu = {
         local target = (player == YOU and sepgp._playerName or player)
 
         if sepgp:isPug(target) then
-          sepgp:givename_gp(target, price)
+          sepgp:givename_gp(target, price, true)
           sepgp:defaultPrint(string.format("PUG %s получил %s за %d GP (OS)", target, item, price))
         else
-          sepgp:givename_gp(target, price)
+          sepgp:givename_gp(target, price, true)
           sepgp:defaultPrint(string.format("%s получил %s за %d GP (OS)", target, item, price))
         end
 
@@ -2782,7 +2852,7 @@ function sepgp:broadcastPRToPugs()
     end
   end
 
-  -- Сортировка по PR убыванию
+  
   table.sort(raidPR, function(a, b) return a.pr > b.pr end)
 
   self:defaultPrint(string.format("[PR] %-14s PR", "Name"))
@@ -2800,6 +2870,33 @@ function sepgp:broadcastPRToPugs()
   end
 
   self:defaultPrint(string.format("Broadcasted PR for %d raid member(s).", sent))
+end
+function sepgp:decay_gp_by_rank()
+  if not (admin()) then return end
+
+  
+  local validRanks = {
+    [0] = true,   
+    [1] = true,   
+    [2] = False,   
+    [3] = False,   
+    [5] = False,  
+  }
+
+  for i = 1, GetNumGuildMembers(1) do
+    local name, _, rankIndex, _, _, _, _, officerNote = GetGuildRosterInfo(i)
+    local gp = sepgp:get_gp_v3(name, officerNote)
+    if gp and validRanks[rankIndex] then
+      local new_gp = sepgp:num_round(gp * sepgp_rank_decay)
+      sepgp:update_epgp_v3(nil, new_gp, i, name, officerNote)
+    end
+  end
+
+  local msg = string.format("GP decayed by %d%% for selected ranks.", (1 - sepgp_rank_decay) * 100)
+  sepgp:simpleSay(msg)
+  sepgp:adminSay(msg)
+  sepgp:addToLog(msg)
+  sepgp:refreshPRTablets()
 end
 
 
