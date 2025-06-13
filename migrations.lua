@@ -1,5 +1,5 @@
 local L = AceLibrary("AceLocale-2.2"):new("shootyepgp")
-function sepgp:v2tov4()
+function sepgp:v2tov3()
   local count = 0
   for i = 1, GetNumGuildMembers(1) do
     local name, _, _, _, class, _, note, officernote, _, _ = GetGuildRosterInfo(i)
@@ -16,7 +16,7 @@ function sepgp:v2tov4()
     end
   end
   self:defaultPrint(string.format(L["Updated %d members to v3 storage."],count))
-  sepgp_dbver = 3
+  sepgp_dbver = 4
 end
 
 -- GLOBALS: sepgp_saychannel,sepgp_groupbyclass,sepgp_groupbyarmor,sepgp_groupbyrole,sepgp_raidonly,sepgp_decay,sepgp_minep,sepgp_reservechannel,sepgp_main,sepgp_progress,sepgp_discount,sepgp_log,sepgp_dbver,sepgp_looted
