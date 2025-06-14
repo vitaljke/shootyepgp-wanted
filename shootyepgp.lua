@@ -1360,7 +1360,7 @@ function sepgp:award_reserve_ep(ep) -- awards ep to reserve list
   end
 end
 
-function sepgp:givename_ep(getname, ep)
+function sepgp:givename_ep(getname, ep,silent)
   if not (admin()) then return end
 
   local isPug, playerNameInGuild = self:isPug(getname)
@@ -1380,6 +1380,26 @@ function sepgp:givename_ep(getname, ep)
       postfix = string.format(L[", %s's Main."], alt)
     end
   end
+
+  local newep = ep + (self:get_ep_v3(getname) or 0)
+  self:update_ep_v3(getname, newep)
+
+  if not silent then
+    local msg
+    if ep < 0 then
+      msg = string.format(L["%s EP Penalty to %s%s."], ep, getname, postfix)
+    else
+      msg = string.format(L["Giving %d ep to %s%s."], ep, getname, postfix)
+    end
+
+    self:debugPrint(msg)
+    self:adminSay(msg)
+    self:addToLog(msg)
+
+    local addonMsg = string.format("%s;%s;%s", getname, "EP", ep)
+    self:addonMessage(addonMsg, "GUILD")
+  end
+end
 
   local newep = ep + (self:get_ep_v3(getname) or 0)
   self:update_ep_v3(getname, newep)
