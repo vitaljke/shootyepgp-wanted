@@ -1333,7 +1333,7 @@ function sepgp:award_raid_ep(ep) -- awards ep to raid members in zone
     for i = 1, GetNumRaidMembers(true) do
       local name, rank, subgroup, level, class, fileName, zone, online, isDead = GetRaidRosterInfo(i)
       if level >= sepgp.VARS.minlevel then
-        self:givename_ep(name,ep)
+        self:givename_ep(name,ep,true)
       end
     end
     self:simpleSay(string.format(L["Giving %d ep to all raidmembers"],ep))
