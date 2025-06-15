@@ -1360,28 +1360,45 @@ function sepgp:award_reserve_ep(ep) -- awards ep to reserve list
   end
 end
 
-function sepgp:givename_ep(getname,ep) -- awards ep to a single character
+function sepgp:givename_ep(getname, ep,silent)
   if not (admin()) then return end
+
+  local isPug, playerNameInGuild = self:isPug(getname)
   local postfix, alt = ""
-  if (sepgp_altspool) then
+
+  if isPug then
+    alt = getname
+    getname = playerNameInGuild
+    ep = self:num_round(sepgp_altpercent * ep)
+    postfix = string.format(", %s's Pug EP Bank.", alt)
+  elseif sepgp_altspool then
     local main = self:parseAlt(getname)
-    if (main) then
+    if main then
       alt = getname
       getname = main
-      ep = self:num_round(sepgp_altpercent*ep)
-      postfix = string.format(L[", %s\'s Main."],alt)
+      ep = self:num_round(sepgp_altpercent * ep)
+      postfix = string.format(L[", %s's Main."], alt)
     end
   end
-  local newep = ep + (self:get_ep_v3(getname) or 0) 
-  self:update_ep_v3(getname,newep) 
-  self:debugPrint(string.format(L["Giving %d ep to %s%s."],ep,getname,postfix))
-  if ep < 0 then -- inform admins and victim of penalties
-    local msg = string.format(L["%s EP Penalty to %s%s."],ep,getname,postfix)
+
+  local newep = ep + (self:get_ep_v3(getname) or 0)
+  self:update_ep_v3(getname, newep)
+
+  if not silent then
+    local msg
+    if ep < 0 then
+      msg = string.format(L["%s EP Penalty to %s%s."], ep, getname, postfix)
+    else
+      msg = string.format(L["Giving %d ep to %s%s."], ep, getname, postfix)
+    end
+
+    self:debugPrint(msg)
     self:adminSay(msg)
     self:addToLog(msg)
-    local addonMsg = string.format("%s;%s;%s",getname,"EP",ep)
-    self:addonMessage(addonMsg,"GUILD")
-  end  
+
+    local addonMsg = string.format("%s;%s;%s", getname, "EP", ep)
+    self:addonMessage(addonMsg, "GUILD")
+  end
 end
 
 function sepgp:givename_gp(getname, gp, isItem)
