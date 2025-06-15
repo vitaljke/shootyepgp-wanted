@@ -127,16 +127,17 @@ local prices = {
 [55482] = {350,"T3.5"}; --Ephemeral Pendant
  
 -- Trash
-[55275] = {0,"T3.5"}; --Silvers of Nullification
-[55277] = {0,"T3.5"}; --The End of All Ambitions
-[55278] = {0,"T3.5"}; --Ques’ Gauntlets of Precision
-[55280] = {0,"T3.5"}; --Boots of Elemental Fury
-[55281] = {0,"T3.5"}; --Gauntlets of Elemental Fury
+[55275] = {400,"T3.5"}; --Silvers of Nullification
+[55277] = {300,"T3.5"}; --The End of All Ambitions
+[55278] = {100,"T3.5"}; --Ques’ Gauntlets of Precision
+[55280] = {100,"T3.5"}; --Boots of Elemental Fury
+[55281] = {100,"T3.5"}; --Gauntlets of Elemental Fury
 [55282] = {0,"T3.5"}; --Boots of the Grand Crusader
 [55283] = {0,"T3.5"}; --Gauntlets of the Grand Crusader
 [55284] = {300,"T3.5"}; --Dragunovi's Sash of Domination
-[55286] = {0,"T3.5"}; --Ring of Holy Light
+[55286] = {100,"T3.5"}; --Ring of Holy Light
 [55508] = {0,"T3.5"}; --Brand of Karazhan
+
 
 
     
