@@ -44,3 +44,4 @@ loot.lua
 reserves.lua
 alts.lua
 logs.lua
+bosslist.lua
