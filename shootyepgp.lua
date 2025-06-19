@@ -27,6 +27,7 @@ sepgp.VARS = {
   osgp = "Offspec GP",
   bankde = "Bank-D/E",
   reminder = C:Red("Unassigned"),
+  instanceEpReminder = nil,
 }
 sepgp.VARS.reservecall = string.format(L["{shootyepgp}Type \"+\" if on main, or \"+<YourMainName>\" (without quotes) if on alt within %dsec."],sepgp.VARS.timeout)
 sepgp._playerName = (UnitName("player"))
@@ -527,7 +528,11 @@ function sepgp:OnEnable() -- PLAYER_LOGIN (2)
       GuildRoster()
     end
   end
-
+self:RegisterEvent("LOOT_OPENED", function()
+  if sepgp:lootMaster() then
+    sepgp:ShowAwardEpReminderIfNeeded()
+  end
+end)
   self:RegisterEvent("CHAT_MSG_CHANNEL", function(message, _, _, _, _, _, _, _, channelName)
     if string.find(channelName, "Wantedpugs") then
       sepgp:parsePugEpUpdate(message, channelName)
@@ -1620,6 +1625,90 @@ function sepgp:SetRefresh(flag)
   if (flag) then
     self:refreshPRTablets()
   end
+end
+
+function sepgp:ShowAwardEpReminderIfNeeded()
+  local inInstance, instanceType = IsInInstance()
+  if (inInstance) and (instanceType == "raid") then
+    local zoneLoc = GetRealZoneText()
+    if not sepgp.VARS.instanceEpReminder or sepgp.VARS.instanceEpReminder[1] ~= zoneLoc then
+      sepgp.VARS.instanceEpReminder = { zoneLoc, sepgp.boss_list[zoneLoc] }
+    end
+
+    if sepgp.VARS.instanceEpReminder then 
+      local target = UnitName("target")
+      local epCost = sepgp:GetBossEpValueByTarget(sepgp.VARS.instanceEpReminder[2], target)
+
+      if not epCost then
+        epCost = sepgp:GetBossEpValueByLoot(sepgp.VARS.instanceEpReminder[2], sepgp:GetLootItemNames())
+      end
+
+      if epCost and epCost[2] > 0 then
+          local msg = string.format("[EP Reminder] Boss killed: %s — Recommend awarding %d EP.", epCost[1], epCost[2])
+          sepgp:adminSay(msg)
+      end
+    end
+  end
+end
+
+function sepgp:GetLootItemNames()
+    local lootNames = {}
+    local numItems = GetNumLootItems()
+
+    for i = 1, numItems do
+        local _, itemName = GetLootSlotInfo(i)
+        if itemName then
+            table.insert(lootNames, itemName)
+        end
+    end
+
+    return lootNames
+end
+
+function sepgp:GetBossEpValueByLoot(bosses, lootNames)
+    local i = 1
+    while bosses[i] do
+        if bosses[i][3] ~= nil and sepgp:ArraysIntersect(bosses[i][3], lootNames) then
+            return bosses[i]
+        end
+        i = i + 1
+    end
+
+    return nil  -- Boss not found
+end
+
+function sepgp:ArraysIntersect(array1, array2)
+    local set = {}
+
+    -- Build lookup table from first array
+    for i, value in ipairs(array1) do
+        set[value] = true
+    end
+
+    -- Check if any item in second array exists in the set
+    for i, value in ipairs(array2) do
+        if set[value] then
+            return true  -- Intersection found
+        end
+    end
+
+    return false  -- No intersection
+end
+
+function sepgp:GetBossEpValueByTarget(bosses, target)
+    if not target then
+      return nil
+    end
+
+    local i = 1
+    while bosses[i] do
+        if bosses[i][1] == target then
+            return bosses[i]
+        end
+        i = i + 1
+    end
+
+    return nil  -- Boss not found
 end
 
 function sepgp:buildRosterTable()
