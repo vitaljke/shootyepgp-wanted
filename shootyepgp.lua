@@ -528,9 +528,17 @@ function sepgp:OnEnable() -- PLAYER_LOGIN (2)
       GuildRoster()
     end
   end
+sepgp._lastLootReminderBoss = nil
 self:RegisterEvent("LOOT_OPENED", function()
   if sepgp:lootMaster() then
-    sepgp:ShowAwardEpReminderIfNeeded()
+    local bossName = UnitName("target") or "Unknown"
+
+   
+    if sepgp._lastLootReminderBoss ~= bossName then
+      sepgp:ShowAwardEpReminderIfNeeded()
+      
+      sepgp._lastLootReminderBoss = bossName
+    end
   end
 end)
   self:RegisterEvent("CHAT_MSG_CHANNEL", function(message, _, _, _, _, _, _, _, channelName)
