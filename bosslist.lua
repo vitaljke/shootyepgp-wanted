@@ -1,4 +1,43 @@
 local zones = {
+["Tower of Karazhan"] = {
+    {"Master Blacksmith Rolfen", 0},
+    {"Brood Queen Araxxna", 0},
+    {"Grizikil", 0},
+    {"Clawlord Howlfang", 0},
+    {"Lord Blackwald II", 0},
+    {"Moroes", 0}
+  },
+
+  ["Zul'Gurub"] = {
+    {"High Priestess Jeklik", 0},
+    {"High Priest Venoxis", 0},
+    {"Witherbark Speaker", 0},
+    {"High Priestess Mar'li", 0},
+    {"Vilebranch Speaker", 0},
+    {"Broodlord Mandokir", 0},
+    {"Ohgan", 0},
+    {"Gri'lek", 0},
+    {"Hazza'rah", 0},
+    {"Renataki", 0},
+    {"Wushoolay", 0},
+    {"Gahz'ranka", 0},
+    {"High Priest Thekal", 0},
+    {"Zealot Zath", 0},
+    {"Zealot Lor'Khan", 0},
+    {"High Priestess Arlokk", 0},
+    {"Jin'do the Hexxer", 0},
+    {"Hakkar", 0}
+  },
+
+  ["Ruins of Ahn'Qiraj"] = {
+    {"Kurinnaxx", 0},
+    {"General Rajaxx", 0},
+    {"Moam", 0},
+    {"Buru the Gorger", 0},
+    {"Ayamiss the Hunter", 0},
+    {"Ossirian the Unscarred", 0}
+  },
+
   ["Molten Core"] = {
     {"Lucifron", 10},
     {"Magmadar", 10},
