@@ -8,6 +8,18 @@ local zones = {
     {"Moroes", 0}
   },
 
+["Tower of Karazhan"] = {
+    {"Gnarlkeeper", 50},
+    {"Ley-Watcher Incantos", 50},
+    {"Anomalus", 50},
+    {"Echo of Medivh", 50},
+    {"King (Chess Event)", 50},
+    {"Kruul", 50},
+    {"Rupturan the Broken", 50},
+    {"Mephistroth", 50},
+    {"Sanv Tas'dal", 50}
+  },
+
   ["Zul'Gurub"] = {
     {"High Priestess Jeklik", 0},
     {"High Priest Venoxis", 0},
