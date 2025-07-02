@@ -397,6 +397,7 @@ options.args["broadcast_pr"] = {
 options.args["decay_gp_by_rank"] = {
   type = "execute",
   name = "Decay GP by Rank",
+  desc = string.format("Decays only GP by %.0f%% for Core+.", (1 - sepgp_rank_decay) * 100),
   order = 102,
   func = function()
     sepgp:decay_gp_by_rank()
