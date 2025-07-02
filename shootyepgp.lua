@@ -398,7 +398,7 @@ options.args["decay_gp_by_rank"] = {
   type = "execute",
   name = "Decay GP by Rank",
   desc = function()
-    return string.format("Decays only GP by %d%% for selected guild ranks.", (1 - sepgp_rank_decay) * 100)
+    return string.format("Decays only GP by %d%% for CORE+.", percent)
   end,
   order = 102,
   func = function()
@@ -2452,31 +2452,51 @@ local zone_multipliers = {
   ["T1"] =   {["T3"]=1,["T2.5"]=1,   ["T2"]=1,  ["T1.5"]=1,   ["T1"]=1}
 }
 function sepgp:suggestedAwardEP()
-  local currentTier, zoneEN, zoneLoc, checkTier, multiplier
+  local currentTier, zoneEN, zoneLoc, checkTier
   local inInstance, instanceType = IsInInstance()
+
   if (inInstance == nil) or (instanceType ~= nil and instanceType == "none") then
-    currentTier = "T1.5"   
+    currentTier = "T1.5"
   end
+
   if (inInstance) and (instanceType == "raid") then
     zoneLoc = GetRealZoneText()
-    if (BZ:HasReverseTranslation(zoneLoc)) then
+    if (zoneLoc and BZ:HasReverseTranslation(zoneLoc)) then
       zoneEN = BZ:GetReverseTranslation(zoneLoc)
       checkTier = raidZones[zoneEN]
+
       if (checkTier) then
         currentTier = checkTier
       end
+
+      if zoneEN == "Onyxia's Lair" then
+        return 20
+      elseif zoneEN == "Emerald Sanctum" then
+        return 25
+      elseif zoneEN == "Molten Core" then
+        return 10
+      elseif zoneEN == "Blackwing Lair" then
+        return 15
+      elseif zoneEN == "Temple of Ahn'Qiraj" then
+        return 12
+      elseif zoneEN == "Tower of Karazhan" then
+        return 50
+      elseif zoneEN == "Sapphiron's Lair" then
+        return 20
+      elseif zoneEN == "Kel'Thuzad Chamber" then
+        return 20
+      elseif zoneEN == "Naxxramas" then
+        return 20
+      end
     end
   end
-  if not currentTier then 
-    return sepgp.VARS.baseaward_ep
-  else
-    multiplier = zone_multipliers[sepgp_progress][currentTier]
+
+  if currentTier and zone_multipliers[sepgp_progress] and zone_multipliers[sepgp_progress][currentTier] then
+    local multiplier = zone_multipliers[sepgp_progress][currentTier]
+    return multiplier * sepgp.VARS.baseaward_ep
   end
-  if (multiplier) then
-    return multiplier*sepgp.VARS.baseaward_ep
-  else
-    return sepgp.VARS.baseaward_ep
-  end
+
+  return sepgp.VARS.baseaward_ep
 end
 
 function sepgp:parseVersion(version,otherVersion)
@@ -2989,7 +3009,8 @@ function sepgp:decay_gp_by_rank()
     end
   end
 
-  local msg = string.format("GP decayed by %d%% for selected ranks.", (1 - sepgp_rank_decay) * 100)
+  local percent = math.floor(((1 - sepgp_rank_decay) * 100) + 0.5)
+  local msg = string.format("GP decayed by %d%% for CORE+.", percent)
   sepgp:simpleSay(msg)
   sepgp:adminSay(msg)
   sepgp:addToLog(msg)
