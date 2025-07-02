@@ -5,10 +5,7 @@ local zones = {
     {"Grizikil", 0},
     {"Clawlord Howlfang", 0},
     {"Lord Blackwald II", 0},
-    {"Moroes", 0}
-  },
-
-["Tower of Karazhan"] = {
+    {"Moroes", 0},
     {"Gnarlkeeper", 50},
     {"Ley-Watcher Incantos", 50},
     {"Anomalus", 50},
