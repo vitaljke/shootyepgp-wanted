@@ -1404,7 +1404,7 @@ function sepgp:givename_ep(getname, ep,silent)
     end
 
     self:debugPrint(msg)
-    self:adminSay(msg)
+    self:simpleSay(msg)
     self:addToLog(msg)
 
     local addonMsg = string.format("%s;%s;%s", getname, "EP", ep)
