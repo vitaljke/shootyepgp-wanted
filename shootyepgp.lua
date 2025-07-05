@@ -1465,7 +1465,7 @@ function sepgp:givename_gp(getname, gp, isItem)
 
   self:debugPrint(string.format(L["Giving %d gp to %s%s."], gp, getname, postfix))
   local msg = string.format(L["Awarding %d GP to %s%s. (Previous: %d, New: %d)"], gp, getname, postfix, oldgp, math.max(sepgp.VARS.basegp, newgp))
-  self:adminSay(msg)
+  self:simpleSay(msg)
   self:addToLog(msg)
 
   local addonMsg = string.format("%s;%s;%s", getname, "GP", gp)
