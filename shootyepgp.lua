@@ -1383,7 +1383,7 @@ function sepgp:givename_ep(getname,ep) -- awards ep to a single character
   self:debugPrint(string.format(L["Giving %d ep to %s%s."],ep,getname,postfix))
   if ep < 0 then -- inform admins and victim of penalties
     local msg = string.format(L["%s EP Penalty to %s%s."],ep,getname,postfix)
-    self:adminSay(msg)
+    self:simpleSay(msg)
     self:addToLog(msg)
     local addonMsg = string.format("%s;%s;%s",getname,"EP",ep)
     self:addonMessage(addonMsg,"GUILD")
@@ -1406,7 +1406,7 @@ function sepgp:givename_gp(getname,gp) -- assigns gp to a single character
   self:update_gp_v3(getname,newgp) 
   self:debugPrint(string.format(L["Giving %d gp to %s%s."],gp,getname,postfix))
   local msg = string.format(L["Awarding %d GP to %s%s. (Previous: %d, New: %d)"],gp,getname,postfix,oldgp,math.max(sepgp.VARS.basegp,newgp))
-  self:adminSay(msg)
+  self:simpleSay(msg)
   self:addToLog(msg)
   local addonMsg = string.format("%s;%s;%s",getname,"GP",gp)
   self:addonMessage(addonMsg,"GUILD")  
