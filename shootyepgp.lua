@@ -747,6 +747,16 @@ function sepgp:delayedInit()
   self:RegisterChatCommand({"/wantedep"}, function() sepgp:CheckPugEP() end)
   self:RegisterChatCommand({"/shooty","/sepgp","/shootyepgp","/wanted"},self.cmdtable())
   self:RegisterChatCommand({"/updatepugep"}, function() sepgp:updateAllPugEP() end)
+  self:RegisterChatCommand({"/awardraid"}, function(msg)
+  if not admin() then return end
+
+  local ep = tonumber(msg)
+  if not ep then
+    ep = self:suggestedAwardEP()
+  end
+
+  self:award_raid_ep(ep)
+end)
   self:RegisterEvent("CHAT_MSG_ADDON","addonComms")  
   -- broadcast our version
   local addonMsg = string.format("VERSION;%s;%d",sepgp._versionString,major_ver)
