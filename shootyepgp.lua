@@ -2476,7 +2476,7 @@ function sepgp:suggestedAwardEP()
       elseif zoneEN == "Blackwing Lair" then
         return 15
       elseif zoneEN == "Temple of Ahn'Qiraj" then
-        return 12
+        return 17
       elseif zoneEN == "Tower of Karazhan" then
         return 50
       elseif zoneEN == "Sapphiron's Lair" then
