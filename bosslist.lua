@@ -89,18 +89,18 @@ local zones = {
   },
 
   ["Ahn'Qiraj"] = {
-    {"The Prophet Skeram", 12},
-    {"Vem", 12},
-    {"Lord Kri", 12},
-    {"Princess Yauj", 12},
-    {"Battle Guard Sartura", 12},
-    {"Fankriss the Unyielding", 12},
-    {"Viscidus", 12},
-    {"Princess Huhuran", 12},
-    {"Emperor Vek'lor", 12},
-    {"Emperor Vek'nilash", 12},
-    {"Ouro", 12},
-    {"C'Thun", 18}
+    {"The Prophet Skeram", 17},
+    {"Vem", 17},
+    {"Lord Kri", 17},
+    {"Princess Yauj", 17},
+    {"Battle Guard Sartura", 17},
+    {"Fankriss the Unyielding", 17},
+    {"Viscidus", 17},
+    {"Princess Huhuran", 17},
+    {"Emperor Vek'lor", 17},
+    {"Emperor Vek'nilash", 17},
+    {"Ouro", 17},
+    {"C'Thun", 17}
   },
 
   ["Naxxramas"] = {
