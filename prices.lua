@@ -8,7 +8,7 @@ local prices = {
 [55078] = {0,"T3.5"}; --Ley-attuned Chocker
 [55084] = {50,"T3.5"}; --Torn Wings of Midnight
 [55081] = {0,"T3.5"}; --Manadrenched Feather Slippers
-[55285] = {150,"T3.5"}; --Crite's Holy Hands
+[55285] = {200,"T3.5"}; --Crite's Holy Hands
 [55079] = {200,"T3.5"}; --Ravenkeeper's Frenzied Embrace
 [55080] = {350,"T3.5"}; --Bloodmoon, Sickle of the Murderous Flight
 [55082] = {50,"T3.5"}; --Idol of Laceration
@@ -16,7 +16,7 @@ local prices = {
 
 --Ley-Watcher Incantos  
 [55086] = {0,"T3.5"}; --Magehunter Belt
-[55099] = {120,"T3.5"}; --Leystreel Legplates
+[55099] = {150,"T3.5"}; --Leystreel Legplates
 [55089] = {250,"T3.5"}; --Bands of the Surgebreaker
 [55507] = {150,"T3.5"}; --Choker of Terminal Arcanum
 
