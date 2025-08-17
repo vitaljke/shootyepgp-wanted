@@ -48,15 +48,15 @@ local zones = {
   },
 
   ["Molten Core"] = {
-    {"Lucifron", 10},
-    {"Magmadar", 10},
-    {"Gehennas", 10},
-    {"Garr", 10},
-    {"Shazzrah", 10},
-    {"Baron Geddon", 10},
-    {"Golemagg the Incinerator", 10},
-    {"Sulfuron Harbinger", 10},
-    {"Majordomo Executus", 10, {
+    {"Lucifron", 0},
+    {"Magmadar", 0},
+    {"Gehennas", 0},
+    {"Garr", 0},
+    {"Shazzrah", 0},
+    {"Baron Geddon", 0},
+    {"Golemagg the Incinerator", 0},
+    {"Sulfuron Harbinger", 0},
+    {"Majordomo Executus", 0, {
       "The Eye of Divinity",
       "Ancient Petrified Leaf",
       "Core Forged Greaves",
@@ -70,7 +70,7 @@ local zones = {
       "Fireproof Cloak",
       "Fireguard Shoulders"
     }},
-    {"Ragnaros", 10}
+    {"Ragnaros", 0}
   },
 
   ["Blackwing Lair"] = {
