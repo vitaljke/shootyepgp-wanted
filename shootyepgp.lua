@@ -3000,12 +3000,11 @@ function sepgp:decay_gp_by_rank()
 
   
   local validRanks = {
-    [0] = true,   
-    [1] = true,   
-    [2] = true,   
-    [3] = true,
-    [4] = true,
-    [5] = true,  
+    [0] = true,   --cons
+    [1] = true,   --cons
+    [2] = true,   --officer
+    [3] = true,   --champ
+    [4] = true,   --core
   }
 
   for i = 1, GetNumGuildMembers(1) do
