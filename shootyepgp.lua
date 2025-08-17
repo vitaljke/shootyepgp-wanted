@@ -2477,12 +2477,8 @@ function sepgp:suggestedAwardEP()
         currentTier = checkTier
       end
 
-      if zoneEN == "Onyxia's Lair" then
-        return 20
-      elseif zoneEN == "Emerald Sanctum" then
+      if zoneEN == "Emerald Sanctum" then
         return 25
-      elseif zoneEN == "Molten Core" then
-        return 10
       elseif zoneEN == "Blackwing Lair" then
         return 15
       elseif zoneEN == "Ahn'Qiraj" then
