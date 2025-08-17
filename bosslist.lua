@@ -85,7 +85,7 @@ local zones = {
   },
 
   ["Onyxia's Lair"] = {
-    {"Onyxia", 20}
+    {"Onyxia", 0}
   },
 
   ["Ahn'Qiraj"] = {
